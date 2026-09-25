@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import type { Address } from "viem";
+import {
+  parseSignature,
+  serializeCompactSignature,
+  signatureToCompactSignature,
+  type Address,
+  type Hex,
+} from "viem";
 import {
   analyzePermitExposure,
   permitBatchTypedData,
@@ -354,6 +360,42 @@ describe("Korp Exposure Map", () => {
         "Permit2 65-byte signatures require v = 27 or 28",
       );
     }
+  });
+
+  it("accepts Permit2's 64-byte EIP-2098 signatures for both recovery ids", async () => {
+    const parities = new Set<number>();
+    // Each fresh key yields a random parity; stop once both have been exercised.
+    for (let i = 0; i < 64 && parities.size < 2; i++) {
+      const input = await fixture([
+        batch("A", [detail(x, 3), detail(y, 4)]),
+        batch("B", [detail(x, 5, 1)]),
+      ]);
+      const compact = structuredClone(input);
+      for (const permit of compact.permits) {
+        const parsed = parseSignature(permit.signature as Hex);
+        parities.add(parsed.yParity!);
+        permit.signature = serializeCompactSignature(
+          signatureToCompactSignature(parsed),
+        );
+        expect(permit.signature).toHaveLength(130);
+      }
+      const expected = await analyzePermitExposure(input);
+      const result = await analyzePermitExposure(compact);
+      expect(result.maxTotal).toBe(expected.maxTotal);
+      expect(result.witness).toEqual(expected.witness);
+      await expect(verifyExposureCertificate(compact, result)).resolves.toBe(
+        true,
+      );
+
+      // Flipping the vs top bit selects the other recovery id and signer.
+      const flipped = structuredClone(compact);
+      const vs = BigInt(`0x${flipped.permits[0]!.signature.slice(66)}`);
+      flipped.permits[0]!.signature = `${flipped.permits[0]!.signature.slice(0, 66)}${(vs ^ (1n << 255n)).toString(16).padStart(64, "0")}`;
+      await expect(analyzePermitExposure(flipped)).rejects.toThrow(
+        "EXPOSURE_INVALID_SIGNATURE",
+      );
+    }
+    expect(parities).toEqual(new Set([0, 1]));
   });
 
   it("rejects incomplete snapshots, unknown fields and unsupported integers before solving", async () => {

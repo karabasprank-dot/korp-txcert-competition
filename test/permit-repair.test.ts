@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { decodeFunctionData, getAddress, type Address } from "viem";
+import {
+  decodeFunctionData,
+  getAddress,
+  parseSignature,
+  serializeCompactSignature,
+  signatureToCompactSignature,
+  type Address,
+  type Hex,
+} from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import {
   permitBatchTypedData,
@@ -221,6 +229,25 @@ describe("Korp Repair Planner", () => {
     expect(result.expectedSlots.find((slot) => slot.token === y)!.nonce).toBe(
       "0",
     );
+  });
+
+  it("plans identically when the inventory uses 64-byte EIP-2098 signatures", async () => {
+    const input = await fixture([
+      batch("unwanted", [detail(x, 3), detail(y, 3)]),
+      batch("wanted", [detail(y, 3), detail(z, 3)]),
+    ]);
+    input.unwantedPermitIds = ["unwanted"];
+    input.wantedSequence = ["wanted"];
+    const compact = structuredClone(input);
+    for (const permit of compact.inventory.permits)
+      permit.signature = serializeCompactSignature(
+        signatureToCompactSignature(parseSignature(permit.signature as Hex)),
+      );
+    const expected = await planPermitRepair(input);
+    const result = await planPermitRepair(compact);
+    expect(result.actions).toEqual(expected.actions);
+    expect(result.expectedSlots).toEqual(expected.expectedSlots);
+    expect(await verifyPermitRepair(compact, result)).toBe(true);
   });
 
   it("reports the concrete same-nonce impossibility when cancelling one would break the wanted permit", async () => {

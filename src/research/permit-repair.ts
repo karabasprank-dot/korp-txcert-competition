@@ -7,8 +7,8 @@ import {
 } from "viem";
 import { z } from "zod";
 import {
-  analyzePermitExposure,
   permitExposureInputSchema,
+  verifyPermitSignatures,
   type PermitExposureInput,
 } from "./permit-exposure.js";
 
@@ -223,9 +223,9 @@ type Prepared = {
 
 async function prepare(raw: unknown): Promise<Prepared> {
   const input = permitRepairInputSchema.parse(raw);
-  // Reuse the existing fail-closed EOA/domain verification boundary. Its bounded
-  // analysis is also read-only; it does not mutate this detached normalized input.
-  await analyzePermitExposure(input.inventory);
+  // Reuse the exposure map's fail-closed EOA/domain signature check without
+  // also running its exposure search, whose result the planner never used.
+  await verifyPermitSignatures(input.inventory);
   const indices = new Map(
     input.inventory.slots.map((slot, i) => [key(slot.token, slot.spender), i]),
   );

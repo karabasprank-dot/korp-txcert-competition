@@ -45,11 +45,14 @@ const permitSchema = z
     spender: addressSchema,
     sigDeadline: uint(MAX_UINT256),
     details: z.array(detailSchema).min(1).max(16),
+    // Permit2 accepts 65-byte (r, s, v) and 64-byte EIP-2098 (r, vs) signatures.
     signature: z
       .string()
-      .regex(/^0x[0-9a-fA-F]{130}$/)
+      .regex(/^0x(?:[0-9a-fA-F]{128}|[0-9a-fA-F]{130})$/)
       .refine(
-        (signature) => ["1b", "1c"].includes(signature.slice(-2).toLowerCase()),
+        (signature) =>
+          signature.length === 130 ||
+          ["1b", "1c"].includes(signature.slice(-2).toLowerCase()),
         "Permit2 65-byte signatures require v = 27 or 28",
       ),
   })
@@ -228,22 +231,38 @@ type CompiledPermit = {
   draw: bigint;
 };
 
-async function prepare(rawInput: unknown) {
-  // Zod creates a detached, normalized copy before any signature-verification await.
-  const input = permitExposureInputSchema.parse(rawInput);
+/** Expand a 64-byte EIP-2098 signature the way Permit2's SignatureVerification
+ * does: s is the low 255 bits of vs and v is 27 plus its top bit. */
+function expandPermit2Signature(signature: string): `0x${string}` {
+  if (signature.length === 132) return signature as `0x${string}`;
+  const vs = BigInt(`0x${signature.slice(66)}`);
+  const s = vs & ((1n << 255n) - 1n);
+  const v = 27n + (vs >> 255n);
+  return `${signature.slice(0, 66)}${s.toString(16).padStart(64, "0")}${v.toString(16)}` as `0x${string}`;
+}
+
+/** Fail-closed EOA ECDSA check of every batch against the owner and domain.
+ * Expects schema-parsed input; contract and EIP-7702 owners are not supported. */
+export async function verifyPermitSignatures(input: PermitExposureInput) {
   for (const permit of input.permits) {
     let verified: boolean;
     try {
       verified = await verifyTypedData({
         address: input.owner,
         ...permitBatchTypedData(input.domain, permit),
-        signature: permit.signature as `0x${string}`,
+        signature: expandPermit2Signature(permit.signature),
       });
     } catch {
       throw new Error(`EXPOSURE_INVALID_SIGNATURE: ${permit.id}`);
     }
     if (!verified) throw new Error(`EXPOSURE_INVALID_SIGNATURE: ${permit.id}`);
   }
+}
+
+async function prepare(rawInput: unknown) {
+  // Zod creates a detached, normalized copy before any signature-verification await.
+  const input = permitExposureInputSchema.parse(rawInput);
+  await verifyPermitSignatures(input);
 
   const now = BigInt(input.asOfTimestamp);
   const weights = new Map(
