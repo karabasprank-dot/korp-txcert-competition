@@ -1,4 +1,24 @@
-# Korp Research: Exposure Map & TxCert
+# Korp Research: Repair Planner, Exposure Map & TxCert
+
+**Korp Repair Planner** finds the least-cost supported permission repair that blocks unwanted signed Permit2 batches, preserves a specified wanted sequence, and keeps explicitly cleared stored allowances at zero. Costs are declared synthetic units, not gas. Browser-only, unsigned calldata, AI-assisted and unaudited.
+
+## Repair Planner — experimental release
+
+[Open the planner](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/repair) · [Model and prior art](REPAIR-PLANNER.md) · [Core source](permit-repair.ts)
+
+Example: an unwanted batch uses token X + Y, while a wanted batch uses X + Z. Invalidating X breaks both; invalidating Y can block the unwanted batch while preserving the wanted batch. If both signatures share the same cancellation scope, the planner reports no valid plan in the supported model. It also checks unwanted permissions that become executable only after other supplied batches run.
+
+The solver enumerates bounded final nonce choices, compiles legal `invalidateNonces` and single-slot `lockdown` calls, and searches reachable permit orders. A nonce increase can **enable** a future permission, so it is never assumed universally safer. Wanted batches must execute together in the requested order; this does not guarantee swap fills or delivery. Nonzero cleared slots need lockdown plus any invalidations necessary to prevent restoration.
+
+Results include unsigned calldata, a preserved sequence, expected slot state and a binding to the request. Rechecking uses the same solver. Later snapshot comparison checks caller-supplied values, not public-chain provenance or finality. Requests exceeding the work limits fail explicitly instead of being labeled impossible.
+
+**Timing boundary:** every repair must complete before any third-party action. Separate EOA transactions are not atomic, and an attacker can act first or between calls. The planner does not connect a wallet, sign, broadcast, estimate fees, recover lost funds or certify live-wallet safety. Inventory completeness, owner identity, deployment semantics and snapshot truth are assumptions.
+
+Reproduce inside the source archive: `node --import tsx scripts/research/repair-fixtures.ts`, `node --import tsx scripts/research/build-repair.ts`, and the local EVM harness `scripts/research/permit-repair-chain.ts`. The pinned reference directory documents local chain setup. The public fixtures use expired synthetic signatures and no private keys.
+
+Validation: typecheck, lint and 236 tests pass, including 18 repair unit cases and six local-contract evidence checks. The planner-generated calls were executed against the pinned official AllowanceTransfer module on a local EVM. No public-chain transactions or real funds were used for the repair experiment.
+
+Revocation and selective cancellation already exist. [The research note](REPAIR-PLANNER.md) identifies IDEX, Uniswap, MetaMask and Revoke.cash precedents. This is a dated Korp implementation, not a first-ever invention claim.
 
 **Korp Exposure Map** computes the maximum collectible exposure represented by a bounded inventory of signed Permit2 allowance batches. It verifies EOA signatures, explores sequential nonce dependencies, and returns a withdrawal witness. Built on the existing Korp research project. AI-assisted and unaudited; not a claim of first-ever invention.
 
@@ -43,7 +63,7 @@ New code: `src/core/outcome-contract.ts`, `scripts/pilot/task-payments.ts`. Inte
 The owner-controlled Node signer now enforces a cumulative Base Sepolia test-USDC authorization budget before signing. Two 0.01 test-USDC purchases settled; the third was blocked before authorization and remained blocked after a database restart. See [public pilot evidence](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/pilot.html) and `docs/pilot/README.md` inside the archive. This is a separate gasless x402 authorization path, not the unfinished hosted native-transfer signer. No production funds or customer adoption are claimed.
 
 ## Reproduce
-Extract `korp-txcert-source.zip` (source structure preserved). Node 24 and Python 3. Run `npm install --ignore-scripts`, `npm run check`, `npm run demo:chain` and `npm run demo:competition`. The snapshot includes 212 passing tests, live Worker/UI, testnet payment verification script, and public evidence.
+Extract `korp-txcert-source.zip` (source structure preserved). Node 24 and Python 3. Run `npm install --ignore-scripts`, `npm run check`, `npm run demo:chain` and `npm run demo:competition`. The snapshot includes 236 passing tests, live Worker/UI, testnet payment verification script, and public evidence.
 
 Deploy the read-only checker to your Cloudflare account with `npx wrangler deploy --config live-testnet/wrangler.jsonc`. No keys are needed for that Worker. See `docs/hackathon/LIVE-TESTNET.md` inside the archive for evidence and limits.
 

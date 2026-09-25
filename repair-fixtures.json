@@ -1,0 +1,949 @@
+{
+  "generatedAt": "2026-09-25T11:23:30.588Z",
+  "mode": "expired synthetic EOA signatures; historical timestamp 1; no funds",
+  "examples": [
+    {
+      "id": "selective",
+      "title": "Remove one permission. Keep the wanted order.",
+      "description": "Unwanted uses X + Y. Wanted uses X + Z. Advancing Y's nonce disables Unwanted while Wanted can still execute. Advancing X would break both.",
+      "input": {
+        "inventory": {
+          "domain": {
+            "chainId": 31337,
+            "verifyingContract": "0x0000000000000000000000000000000000000064"
+          },
+          "owner": "0xfE65ea97CA17c191b53967e0484601c64673B9E5",
+          "asOfTimestamp": 1,
+          "assets": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "weight": "1"
+            }
+          ],
+          "slots": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            }
+          ],
+          "permits": [
+            {
+              "id": "Unwanted",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000001",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                },
+                {
+                  "token": "0x0000000000000000000000000000000000000002",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xbc44ccf903bc4948741246b0662875e564fb9ade7d45961fd8899254c0cd15161196b4a3e78f1c565de327b395cd3b1457541f125ead25179129f34e6df0f7e61b"
+            },
+            {
+              "id": "Wanted",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000001",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                },
+                {
+                  "token": "0x0000000000000000000000000000000000000003",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0x45e61c0c8e024c6743f07602959e7fc545f322cd0ae1b526b3a7a9ac642ca1f95436ad42fbd86800d4a06f5c21621bc783d96e317538e1badf2484a67abf112b1b"
+            }
+          ]
+        },
+        "unwantedPermitIds": [
+          "Unwanted"
+        ],
+        "wantedSequence": [
+          "Wanted"
+        ]
+      },
+      "expected": {
+        "version": "korp-repair-planner-v1",
+        "inputHash": "0xbeaeb9d2c556258ee5e7a005008908638c6d614c50bb8a79501073405b71a303",
+        "status": "repairable",
+        "actions": [
+          {
+            "kind": "invalidateNonces",
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "newNonce": "1",
+            "cost": "1",
+            "transaction": {
+              "chainId": 31337,
+              "from": "0xfe65ea97ca17c191b53967e0484601c64673b9e5",
+              "to": "0x0000000000000000000000000000000000000064",
+              "data": "0x65d9723c000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000650000000000000000000000000000000000000000000000000000000000000001",
+              "value": "0"
+            }
+          }
+        ],
+        "totalCost": "1",
+        "wantedWitness": [
+          "Wanted"
+        ],
+        "expectedSlots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "1",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "search": {
+          "candidateCount": 2,
+          "stateCount": 3,
+          "candidateSpace": 2,
+          "limits": {
+            "maxCandidates": 10000,
+            "maxStates": 100000,
+            "maxActions": 64
+          }
+        },
+        "explanation": {
+          "code": "MINIMUM_COST_REPAIR",
+          "message": "This is a minimum synthetic-cost repair within the supported owner actions. The wanted permit sequence accepts, every unwanted supplied permit is unreachable, and requested slots remain stored zero.",
+          "permitIds": [],
+          "slotKeys": [],
+          "witness": [
+            "Wanted"
+          ],
+          "frontier": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            }
+          ]
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and signature inventory: completeness, current chain state, finality, and owner account code are not verified.",
+          "Official unchanged Permit2 AllowanceTransfer semantics and EOA signatures only; the supplied block timestamp stays frozen.",
+          "Every proposed owner action must land before any third-party action. Separate EOA transactions are not atomic and can be front-run; this planner does not protect the execution race.",
+          "After repairs, unwanted permits must be unreachable under every order of supplied permits. Unknown signatures, new signatures, later time, new owner actions, and reorgs are outside the guarantee.",
+          "Wanted sequence means permit acceptance in exactly the supplied order immediately after repair, without other permits interleaved. It does not prove swap/order fulfillment or liveness against competing actors.",
+          "Requested clear slots must have literal stored amount zero, including expired positive allowances, initially and after every reachable supplied permit prefix.",
+          "Repair actions are nonce invalidations and per-slot lockdowns only. Nonce increases can unlock permissions, so every candidate is checked for all reachable supplied grants.",
+          "Costs are positive synthetic per-invalidation-call and per-cleared-slot units, not gas estimates. Canonical thresholds include current nonce, signed nonce, and signed nonce plus one, with minimal repeated jumps of at most 65535.",
+          "Exact search stops with an explicit error beyond 10000 candidate plans, 100000 explored states, or 64 actions. A search-limit error is not an impossibility result.",
+          "Calldata is unsigned. No RPC, signing, broadcasting, token transfer, or deployment is performed."
+        ]
+      }
+    },
+    {
+      "id": "shared",
+      "title": "Two signatures share the same cancellation scope",
+      "description": "Both signatures require X at nonce 0. Every supported nonce invalidation that blocks Unwanted also blocks Wanted. Clearing today's allowance does not invalidate either signature.",
+      "input": {
+        "inventory": {
+          "domain": {
+            "chainId": 31337,
+            "verifyingContract": "0x0000000000000000000000000000000000000064"
+          },
+          "owner": "0xfE65ea97CA17c191b53967e0484601c64673B9E5",
+          "asOfTimestamp": 1,
+          "assets": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "weight": "1"
+            }
+          ],
+          "slots": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            }
+          ],
+          "permits": [
+            {
+              "id": "Unwanted",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000001",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xcb2d39371179847f5d4fbb36e8b3705a7fb54f84f6c7cb807409c334aa4572d27a36a404bedee3091489c453087eea26f18406344d742d7f9daf2f4611d046331c"
+            },
+            {
+              "id": "Wanted",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000001",
+                  "amount": "2",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xf6cec5a8d9ccb43c45f5de65d38acdd2d94e34a01572b5f19beb4f3eae73f0f85efccdeaf6de7707a475343265daa0da371b0ce09069eebfe8a97f2820c341da1b"
+            }
+          ]
+        },
+        "unwantedPermitIds": [
+          "Unwanted"
+        ],
+        "wantedSequence": [
+          "Wanted"
+        ]
+      },
+      "expected": {
+        "version": "korp-repair-planner-v1",
+        "inputHash": "0x7cf50b5425869eef8854c03386fd877ed6f533dd5947e08b6ee5e3486a5e9e26",
+        "status": "impossible",
+        "actions": [],
+        "totalCost": null,
+        "wantedWitness": [],
+        "expectedSlots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "search": {
+          "candidateCount": 1,
+          "stateCount": 1,
+          "candidateSpace": 1,
+          "limits": {
+            "maxCandidates": 10000,
+            "maxStates": 100000,
+            "maxActions": 64
+          }
+        },
+        "explanation": {
+          "code": "IMPOSSIBLE_UNWANTED_REACHABLE",
+          "message": "Impossible within the supported repair actions: all 1 canonical frontiers compatible with the exact wanted sequence fail. Example: Unwanted permit Unwanted can execute after the supplied permit prefix Unwanted.",
+          "permitIds": [
+            "Unwanted"
+          ],
+          "slotKeys": [
+            "0x0000000000000000000000000000000000000001:0x0000000000000000000000000000000000000065"
+          ],
+          "witness": [
+            "Unwanted"
+          ],
+          "frontier": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            }
+          ]
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and signature inventory: completeness, current chain state, finality, and owner account code are not verified.",
+          "Official unchanged Permit2 AllowanceTransfer semantics and EOA signatures only; the supplied block timestamp stays frozen.",
+          "Every proposed owner action must land before any third-party action. Separate EOA transactions are not atomic and can be front-run; this planner does not protect the execution race.",
+          "After repairs, unwanted permits must be unreachable under every order of supplied permits. Unknown signatures, new signatures, later time, new owner actions, and reorgs are outside the guarantee.",
+          "Wanted sequence means permit acceptance in exactly the supplied order immediately after repair, without other permits interleaved. It does not prove swap/order fulfillment or liveness against competing actors.",
+          "Requested clear slots must have literal stored amount zero, including expired positive allowances, initially and after every reachable supplied permit prefix.",
+          "Repair actions are nonce invalidations and per-slot lockdowns only. Nonce increases can unlock permissions, so every candidate is checked for all reachable supplied grants.",
+          "Costs are positive synthetic per-invalidation-call and per-cleared-slot units, not gas estimates. Canonical thresholds include current nonce, signed nonce, and signed nonce plus one, with minimal repeated jumps of at most 65535.",
+          "Exact search stops with an explicit error beyond 10000 candidate plans, 100000 explored states, or 64 actions. A search-limit error is not an impossibility result.",
+          "Calldata is unsigned. No RPC, signing, broadcasting, token transfer, or deployment is performed."
+        ]
+      }
+    },
+    {
+      "id": "later",
+      "title": "The unwanted permission becomes usable later",
+      "description": "Wanted advances X to nonce 1. That enables Unwanted, which also needs Y at nonce 0. The planner must block the later permission while keeping Wanted executable.",
+      "input": {
+        "inventory": {
+          "domain": {
+            "chainId": 31337,
+            "verifyingContract": "0x0000000000000000000000000000000000000064"
+          },
+          "owner": "0xfE65ea97CA17c191b53967e0484601c64673B9E5",
+          "asOfTimestamp": 1,
+          "assets": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "weight": "1"
+            }
+          ],
+          "slots": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            }
+          ],
+          "permits": [
+            {
+              "id": "Wanted",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000001",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xcb2d39371179847f5d4fbb36e8b3705a7fb54f84f6c7cb807409c334aa4572d27a36a404bedee3091489c453087eea26f18406344d742d7f9daf2f4611d046331c"
+            },
+            {
+              "id": "Unwanted",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000001",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "1"
+                },
+                {
+                  "token": "0x0000000000000000000000000000000000000002",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xc67fb0f921205c076f5eaae09eae343cdf6c41ed0979486f655ac33e731aeed1325172ca0e652b58d366d0f35d5c74db82eb8e26edce52563a73ac7bb358566a1b"
+            }
+          ]
+        },
+        "unwantedPermitIds": [
+          "Unwanted"
+        ],
+        "wantedSequence": [
+          "Wanted"
+        ]
+      },
+      "expected": {
+        "version": "korp-repair-planner-v1",
+        "inputHash": "0xca4c2065d5114bb9a2203da859016756730a0ebd77fb9034c415dd5688f8b91e",
+        "status": "repairable",
+        "actions": [
+          {
+            "kind": "invalidateNonces",
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "newNonce": "1",
+            "cost": "1",
+            "transaction": {
+              "chainId": 31337,
+              "from": "0xfe65ea97ca17c191b53967e0484601c64673b9e5",
+              "to": "0x0000000000000000000000000000000000000064",
+              "data": "0x65d9723c000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000650000000000000000000000000000000000000000000000000000000000000001",
+              "value": "0"
+            }
+          }
+        ],
+        "totalCost": "1",
+        "wantedWitness": [
+          "Wanted"
+        ],
+        "expectedSlots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "1",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "search": {
+          "candidateCount": 2,
+          "stateCount": 4,
+          "candidateSpace": 2,
+          "limits": {
+            "maxCandidates": 10000,
+            "maxStates": 100000,
+            "maxActions": 64
+          }
+        },
+        "explanation": {
+          "code": "MINIMUM_COST_REPAIR",
+          "message": "This is a minimum synthetic-cost repair within the supported owner actions. The wanted permit sequence accepts, every unwanted supplied permit is unreachable, and requested slots remain stored zero.",
+          "permitIds": [],
+          "slotKeys": [],
+          "witness": [
+            "Wanted"
+          ],
+          "frontier": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            }
+          ]
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and signature inventory: completeness, current chain state, finality, and owner account code are not verified.",
+          "Official unchanged Permit2 AllowanceTransfer semantics and EOA signatures only; the supplied block timestamp stays frozen.",
+          "Every proposed owner action must land before any third-party action. Separate EOA transactions are not atomic and can be front-run; this planner does not protect the execution race.",
+          "After repairs, unwanted permits must be unreachable under every order of supplied permits. Unknown signatures, new signatures, later time, new owner actions, and reorgs are outside the guarantee.",
+          "Wanted sequence means permit acceptance in exactly the supplied order immediately after repair, without other permits interleaved. It does not prove swap/order fulfillment or liveness against competing actors.",
+          "Requested clear slots must have literal stored amount zero, including expired positive allowances, initially and after every reachable supplied permit prefix.",
+          "Repair actions are nonce invalidations and per-slot lockdowns only. Nonce increases can unlock permissions, so every candidate is checked for all reachable supplied grants.",
+          "Costs are positive synthetic per-invalidation-call and per-cleared-slot units, not gas estimates. Canonical thresholds include current nonce, signed nonce, and signed nonce plus one, with minimal repeated jumps of at most 65535.",
+          "Exact search stops with an explicit error beyond 10000 candidate plans, 100000 explored states, or 64 actions. A search-limit error is not an impossibility result.",
+          "Calldata is unsigned. No RPC, signing, broadcasting, token transfer, or deployment is performed."
+        ]
+      }
+    },
+    {
+      "id": "clear",
+      "title": "Clear the allowance and prevent its restoration",
+      "description": "X has five units of stored allowance and an unused permit can restore it. This requires both a nonce invalidation and lockdown. Wanted uses Y and stays executable.",
+      "input": {
+        "inventory": {
+          "domain": {
+            "chainId": 31337,
+            "verifyingContract": "0x0000000000000000000000000000000000000064"
+          },
+          "owner": "0xfE65ea97CA17c191b53967e0484601c64673B9E5",
+          "asOfTimestamp": 1,
+          "assets": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "weight": "1"
+            }
+          ],
+          "slots": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "5",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            }
+          ],
+          "permits": [
+            {
+              "id": "Restore-X",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000001",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xcb2d39371179847f5d4fbb36e8b3705a7fb54f84f6c7cb807409c334aa4572d27a36a404bedee3091489c453087eea26f18406344d742d7f9daf2f4611d046331c"
+            },
+            {
+              "id": "Wanted",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000002",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xa9ee484ae4fd2f16cbc3f712f774c7b78ae8d18f660d9920807887cf0a0f6240190ed23396da1d9907e5f1f9be6faf26c54e102b8bfb970097f6f8dc8b997d151c"
+            }
+          ]
+        },
+        "unwantedPermitIds": [
+          "Restore-X"
+        ],
+        "wantedSequence": [
+          "Wanted"
+        ],
+        "clearAllowanceSlots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065"
+          }
+        ]
+      },
+      "expected": {
+        "version": "korp-repair-planner-v1",
+        "inputHash": "0xdf25f5b96737670a94b4ad6f861e1a6ddfa3b7fcb5d03a59e98fbd0950a883d6",
+        "status": "repairable",
+        "actions": [
+          {
+            "kind": "invalidateNonces",
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "newNonce": "1",
+            "cost": "1",
+            "transaction": {
+              "chainId": 31337,
+              "from": "0xfe65ea97ca17c191b53967e0484601c64673b9e5",
+              "to": "0x0000000000000000000000000000000000000064",
+              "data": "0x65d9723c000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000650000000000000000000000000000000000000000000000000000000000000001",
+              "value": "0"
+            }
+          },
+          {
+            "kind": "lockdown",
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "cost": "1",
+            "transaction": {
+              "chainId": 31337,
+              "from": "0xfe65ea97ca17c191b53967e0484601c64673b9e5",
+              "to": "0x0000000000000000000000000000000000000064",
+              "data": "0xcc53287f0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000065",
+              "value": "0"
+            }
+          }
+        ],
+        "totalCost": "2",
+        "wantedWitness": [
+          "Wanted"
+        ],
+        "expectedSlots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "1",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "search": {
+          "candidateCount": 2,
+          "stateCount": 3,
+          "candidateSpace": 2,
+          "limits": {
+            "maxCandidates": 10000,
+            "maxStates": 100000,
+            "maxActions": 64
+          }
+        },
+        "explanation": {
+          "code": "MINIMUM_COST_REPAIR",
+          "message": "This is a minimum synthetic-cost repair within the supported owner actions. The wanted permit sequence accepts, every unwanted supplied permit is unreachable, and requested slots remain stored zero.",
+          "permitIds": [],
+          "slotKeys": [],
+          "witness": [
+            "Wanted"
+          ],
+          "frontier": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            }
+          ]
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and signature inventory: completeness, current chain state, finality, and owner account code are not verified.",
+          "Official unchanged Permit2 AllowanceTransfer semantics and EOA signatures only; the supplied block timestamp stays frozen.",
+          "Every proposed owner action must land before any third-party action. Separate EOA transactions are not atomic and can be front-run; this planner does not protect the execution race.",
+          "After repairs, unwanted permits must be unreachable under every order of supplied permits. Unknown signatures, new signatures, later time, new owner actions, and reorgs are outside the guarantee.",
+          "Wanted sequence means permit acceptance in exactly the supplied order immediately after repair, without other permits interleaved. It does not prove swap/order fulfillment or liveness against competing actors.",
+          "Requested clear slots must have literal stored amount zero, including expired positive allowances, initially and after every reachable supplied permit prefix.",
+          "Repair actions are nonce invalidations and per-slot lockdowns only. Nonce increases can unlock permissions, so every candidate is checked for all reachable supplied grants.",
+          "Costs are positive synthetic per-invalidation-call and per-cleared-slot units, not gas estimates. Canonical thresholds include current nonce, signed nonce, and signed nonce plus one, with minimal repeated jumps of at most 65535.",
+          "Exact search stops with an explicit error beyond 10000 candidate plans, 100000 explored states, or 64 actions. A search-limit error is not an impossibility result.",
+          "Calldata is unsigned. No RPC, signing, broadcasting, token transfer, or deployment is performed."
+        ]
+      }
+    },
+    {
+      "id": "unchanged",
+      "title": "Already blocked; preserve a valid sequence",
+      "description": "Unwanted's nonce was already consumed. Wanted-1 and Wanted-2 can execute in the requested order. No repair is needed for these supplied constraints.",
+      "input": {
+        "inventory": {
+          "domain": {
+            "chainId": 31337,
+            "verifyingContract": "0x0000000000000000000000000000000000000064"
+          },
+          "owner": "0xfE65ea97CA17c191b53967e0484601c64673B9E5",
+          "asOfTimestamp": 1,
+          "assets": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "weight": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "weight": "1"
+            }
+          ],
+          "slots": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "1",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0",
+              "currentAllowance": "0",
+              "expiration": "2"
+            }
+          ],
+          "permits": [
+            {
+              "id": "Unwanted",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000001",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xcb2d39371179847f5d4fbb36e8b3705a7fb54f84f6c7cb807409c334aa4572d27a36a404bedee3091489c453087eea26f18406344d742d7f9daf2f4611d046331c"
+            },
+            {
+              "id": "Wanted-1",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000002",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "0"
+                }
+              ],
+              "signature": "0xa9ee484ae4fd2f16cbc3f712f774c7b78ae8d18f660d9920807887cf0a0f6240190ed23396da1d9907e5f1f9be6faf26c54e102b8bfb970097f6f8dc8b997d151c"
+            },
+            {
+              "id": "Wanted-2",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "sigDeadline": "2",
+              "details": [
+                {
+                  "token": "0x0000000000000000000000000000000000000002",
+                  "amount": "3",
+                  "expiration": "2",
+                  "nonce": "1"
+                }
+              ],
+              "signature": "0xdd00f40a60782291f483df64c0d09396245c64e423a29c1db6153d7251fc39a55030bf71c636e64b66eec8098c183688137c1d02eeeae877b96e14828c0608041b"
+            }
+          ]
+        },
+        "unwantedPermitIds": [
+          "Unwanted"
+        ],
+        "wantedSequence": [
+          "Wanted-1",
+          "Wanted-2"
+        ]
+      },
+      "expected": {
+        "version": "korp-repair-planner-v1",
+        "inputHash": "0x461861f98283f5ee48b43bd9243e37bba887235873faa8564ac6ae4ae8cb5292",
+        "status": "unchanged",
+        "actions": [],
+        "totalCost": "0",
+        "wantedWitness": [
+          "Wanted-1",
+          "Wanted-2"
+        ],
+        "expectedSlots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "1",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "search": {
+          "candidateCount": 1,
+          "stateCount": 3,
+          "candidateSpace": 1,
+          "limits": {
+            "maxCandidates": 10000,
+            "maxStates": 100000,
+            "maxActions": 64
+          }
+        },
+        "explanation": {
+          "code": "ALREADY_SATISFIES",
+          "message": "No owner action is needed: all supplied constraints already hold.",
+          "permitIds": [],
+          "slotKeys": [],
+          "witness": [],
+          "frontier": [
+            {
+              "token": "0x0000000000000000000000000000000000000001",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "1"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000002",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            },
+            {
+              "token": "0x0000000000000000000000000000000000000003",
+              "spender": "0x0000000000000000000000000000000000000065",
+              "nonce": "0"
+            }
+          ]
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and signature inventory: completeness, current chain state, finality, and owner account code are not verified.",
+          "Official unchanged Permit2 AllowanceTransfer semantics and EOA signatures only; the supplied block timestamp stays frozen.",
+          "Every proposed owner action must land before any third-party action. Separate EOA transactions are not atomic and can be front-run; this planner does not protect the execution race.",
+          "After repairs, unwanted permits must be unreachable under every order of supplied permits. Unknown signatures, new signatures, later time, new owner actions, and reorgs are outside the guarantee.",
+          "Wanted sequence means permit acceptance in exactly the supplied order immediately after repair, without other permits interleaved. It does not prove swap/order fulfillment or liveness against competing actors.",
+          "Requested clear slots must have literal stored amount zero, including expired positive allowances, initially and after every reachable supplied permit prefix.",
+          "Repair actions are nonce invalidations and per-slot lockdowns only. Nonce increases can unlock permissions, so every candidate is checked for all reachable supplied grants.",
+          "Costs are positive synthetic per-invalidation-call and per-cleared-slot units, not gas estimates. Canonical thresholds include current nonce, signed nonce, and signed nonce plus one, with minimal repeated jumps of at most 65535.",
+          "Exact search stops with an explicit error beyond 10000 candidate plans, 100000 explored states, or 64 actions. A search-limit error is not an impossibility result.",
+          "Calldata is unsigned. No RPC, signing, broadcasting, token transfer, or deployment is performed."
+        ]
+      }
+    }
+  ]
+}
