@@ -1,0 +1,43 @@
+{
+  "at": "2026-09-25T06:09:44.590Z",
+  "service": "https://korp-txcert-sepolia.mute-cell-557f.workers.dev",
+  "receipt": {
+    "success": true,
+    "transaction": "0x253006ca04b98c1870b152f6e13f510ea4a2e2092c19893ce65ebbae7b6c1c61",
+    "network": "eip155:84532"
+  },
+  "paymentConfirmed": true,
+  "certificateVerified": true,
+  "replayChecks": [
+    {
+      "variant": "same-body",
+      "status": "passed",
+      "httpStatus": 200,
+      "responseWasJson": true,
+      "certificateReturned": true,
+      "cachedOriginal": true
+    },
+    {
+      "variant": "changed-body",
+      "status": "passed",
+      "httpStatus": 409,
+      "responseWasJson": true,
+      "certificateReturned": false,
+      "cachedOriginal": false
+    }
+  ],
+  "verified": true,
+  "certificate": {
+    "version": 1,
+    "issuedAt": 1790316583,
+    "expiresAt": 1790316643,
+    "chainId": 84532,
+    "transactionHash": "0x846a2c921416e848f9b2f5d34bdfdb3b68d65c750cd278895d198f167f4c59c6",
+    "policyHash": "0x76c972b65aef2890ac0f1d0e1161b899b6e6cef2ebb56d90e16c3e1dc04ac8e0",
+    "decision": "PASS",
+    "attestor": "0xe67BC8514160Bc426684f48926cc0096524fe14f",
+    "service": "https://korp-txcert-sepolia.mute-cell-557f.workers.dev",
+    "signature": "0x8fce7bc4c23c2c44a6c0fdb2d325e30f4e2cd7360537e7faf9157134d02699fa29537fe0b74d90804ed47511df66bf78e0d0433afbcab8556a7f13ab7caad3811c"
+  },
+  "chainBlock": "47274149"
+}

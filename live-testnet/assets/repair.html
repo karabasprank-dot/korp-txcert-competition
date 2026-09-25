@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Korp Repair Planner — Cancel the risk. Keep the plan.</title>
+    <meta
+      name="description"
+      content="Find a bounded Permit2 permission repair plan that preserves the wanted sequence. Local calculations, unsigned actions, no wallet connection."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #16252a;
+        --muted: #53636a;
+        --line: #d3dedc;
+        --green: #135d4f;
+        --paper: #f4f6f1;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.55 system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      a {
+        color: var(--green);
+        text-underline-offset: 3px;
+      }
+      header,
+      main,
+      footer {
+        width: min(1100px, calc(100% - 40px));
+        margin: auto;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 25px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        font-weight: 850;
+        letter-spacing: 0.15em;
+        font-size: 18px;
+        text-decoration: none;
+      }
+      .tag,
+      .eyebrow {
+        font:
+          700 11px/1.4 ui-monospace,
+          monospace;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .tag {
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 7px 12px;
+      }
+      main {
+        padding: 55px 0;
+      }
+      .hero {
+        max-width: 820px;
+      }
+      .eyebrow {
+        color: var(--green);
+      }
+      h1 {
+        font-size: clamp(38px, 6vw, 68px);
+        line-height: 1.04;
+        letter-spacing: -0.055em;
+        margin: 16px 0 23px;
+        max-width: 800px;
+      }
+      h2 {
+        font-size: 23px;
+        letter-spacing: -0.025em;
+        margin: 0 0 14px;
+      }
+      .lead {
+        font-size: 19px;
+        color: var(--muted);
+        max-width: 700px;
+      }
+      .notice {
+        border-left: 3px solid var(--green);
+        padding-left: 15px;
+        font-size: 14px;
+        color: var(--muted);
+        max-width: 850px;
+      }
+      .workspace {
+        margin-top: 38px;
+        display: grid;
+        grid-template-columns: 1fr 1.15fr;
+        gap: 22px;
+        align-items: start;
+      }
+      .panel {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 19px;
+        padding: 25px;
+        min-width: 0;
+      }
+      .number {
+        font:
+          500 70px/1.1 ui-monospace,
+          monospace;
+        letter-spacing: -0.06em;
+        color: var(--green);
+        overflow-wrap: anywhere;
+      }
+      .label {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .metric {
+        border-bottom: 1px solid var(--line);
+        padding: 18px 0;
+      }
+      .minor {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        padding: 18px 0;
+      }
+      .minor strong {
+        font-size: 25px;
+        display: block;
+        overflow-wrap: anywhere;
+      }
+      label {
+        display: block;
+        font-weight: 650;
+        margin: 14px 0 7px;
+      }
+      select,
+      textarea,
+      button {
+        font: inherit;
+      }
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid #a7b8b2;
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        padding: 12px;
+      }
+      textarea {
+        font:
+          12px/1.55 ui-monospace,
+          monospace;
+        min-height: 290px;
+        resize: vertical;
+      }
+      button {
+        border: 0;
+        border-radius: 8px;
+        padding: 12px 17px;
+        background: var(--green);
+        color: white;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      button.secondary {
+        color: var(--green);
+        background: #e7efe9;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 17px;
+      }
+      button:focus-visible,
+      select:focus-visible,
+      summary:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid #db9e36;
+        outline-offset: 3px;
+      }
+      p {
+        margin: 12px 0;
+      }
+      .small {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      #status {
+        min-height: 3em;
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 16px;
+      }
+      #sequence {
+        padding: 13px;
+        background: #f1f5f1;
+        border-radius: 8px;
+        font:
+          13px/1.7 ui-monospace,
+          monospace;
+        overflow-wrap: anywhere;
+      }
+      pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        font:
+          11px/1.5 ui-monospace,
+          monospace;
+        max-height: 350px;
+        overflow: auto;
+      }
+      details {
+        margin-top: 18px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .empty {
+        min-height: 270px;
+        display: flex;
+        align-items: center;
+        color: var(--muted);
+        font-size: 20px;
+      }
+      .bounds {
+        margin-top: 25px;
+      }
+      .bounds p {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 23px 0 35px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        font-size: 13px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (max-width: 750px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+        main {
+          padding-top: 34px;
+        }
+        .panel {
+          padding: 20px;
+        }
+        header {
+          align-items: flex-start;
+        }
+        .tag {
+          font-size: 10px;
+          max-width: 150px;
+        }
+        .number {
+          font-size: 58px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+    <style>
+      .outcome {
+        font-size: 34px;
+        line-height: 1.15;
+        font-weight: 720;
+        letter-spacing: -0.035em;
+        margin: 16px 0;
+        color: var(--green);
+      }
+      .step {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 13px;
+        margin: 10px 0;
+        background: #f6f8f4;
+        overflow-wrap: anywhere;
+      }
+      .step strong {
+        display: block;
+      }
+      .step small {
+        display: block;
+        color: var(--muted);
+      }
+      .constraints {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 16px 0;
+      }
+      .chip {
+        padding: 5px 10px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+      }
+      .compare {
+        margin-top: 22px;
+        padding-top: 22px;
+        border-top: 1px solid var(--line);
+      }
+      #observed {
+        min-height: 170px;
+      }
+      #comparison-status {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      button[hidden] {
+        display: none;
+      }
+      .tag {
+        white-space: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">KORP</a
+      ><span class="tag">Repair Planner · experimental</span>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Permit2 / Permission recovery research</div>
+        <h1>Cancel the risk.<br />Keep the plan.</h1>
+        <p class="lead">
+          Find the smallest supported repair that blocks unwanted signed
+          permissions while keeping your wanted permission sequence executable.
+          See exactly what each change affects.
+        </p>
+        <p class="notice">
+          A local planner, not an emergency protection service. It creates
+          unsigned actions only. No wallet connection or broadcasts. Public
+          examples contain expired synthetic signatures. A plan assumes every
+          repair completes before anyone uses a permission.
+        </p>
+      </section>
+      <div class="workspace">
+        <section class="panel">
+          <h2>Set the recovery goal</h2>
+          <label for="scenario">Choose a repair case</label
+          ><select id="scenario"></select>
+          <p class="small" id="description"></p>
+          <div class="constraints" id="constraints"></div>
+          <details>
+            <summary>Inspect or replace the local request</summary>
+            <p class="small">
+              Includes the permission inventory, unwanted permit IDs, wanted
+              sequence, optional slots to keep at stored allowance zero, and
+              synthetic action costs. This page cannot discover unshared
+              signatures. Inputs stay in this browser.
+            </p>
+            <label for="inventory">Repair request JSON</label
+            ><textarea
+              id="inventory"
+              spellcheck="false"
+              autocomplete="off"
+            ></textarea>
+          </details>
+          <div class="actions">
+            <button id="run" disabled>Find repair plan</button
+            ><button class="secondary" id="verify" disabled>
+              Recheck plan
+            </button>
+          </div>
+          <p id="status" role="status" aria-live="polite">
+            Loading public examples…
+          </p>
+          <noscript
+            >This tool needs JavaScript. The research and source remain
+            available below.</noscript
+          >
+        </section>
+        <section class="panel" aria-label="Repair result">
+          <div id="empty" class="empty">One plan. Its effects. Its limits.</div>
+          <div id="result" hidden>
+            <div class="eyebrow">Within the supplied inventory and model</div>
+            <div class="outcome" id="outcome"></div>
+            <p id="explanation"></p>
+            <div class="minor">
+              <div>
+                <span class="label">Synthetic cost</span
+                ><strong id="cost">—</strong>
+              </div>
+              <div>
+                <span class="label">Unsigned calls</span
+                ><strong id="calls">—</strong>
+              </div>
+            </div>
+            <h2 id="actions-title">Proposed actions</h2>
+            <div id="steps"></div>
+            <h2>Wanted sequence</h2>
+            <p id="sequence"></p>
+            <p class="small" id="search"></p>
+            <details>
+              <summary>Inspect the result and unsigned calldata</summary>
+              <p class="small">
+                No fees are estimated. The destination comes from the supplied
+                inventory and is not authenticated. Example calls target a
+                synthetic local deployment. Downloaded results contain addresses
+                and unsigned calls, but no supplied bearer signatures.
+              </p>
+              <pre id="certificate"></pre>
+              <button class="secondary" id="download">
+                Download plan only
+              </button>
+            </details>
+            <div class="compare" id="compare">
+              <h2>Compare a later snapshot</h2>
+              <p class="small">
+                After an owner performs a repair, compare a new caller-supplied
+                slot snapshot with the planned state. This is an exact data
+                comparison—not verified on-chain execution, finality, or
+                protection against races.
+              </p>
+              <button class="secondary" id="sample">
+                Load expected demo snapshot</button
+              ><label for="observed">Observed slots JSON</label
+              ><textarea
+                id="observed"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Paste a later slot snapshot here"
+              ></textarea>
+              <div class="actions">
+                <button class="secondary" id="compare-button">
+                  Compare snapshot
+                </button>
+              </div>
+              <p id="comparison-status" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <section class="panel bounds">
+        <h2>What a valid plan means</h2>
+        <p>
+          <strong>Blocked:</strong> no unwanted supplied permit can execute in
+          any reachable order of the supplied permits. Slots explicitly marked
+          clear must have stored allowance zero, including after any reachable
+          known grant. These are separate requirements.
+        </p>
+        <p>
+          <strong>Preserved:</strong> the specified wanted permission batches
+          can execute together in the requested order from the repaired
+          snapshot. This does not prove a swap will fill, a merchant will
+          deliver, or a token transfer will succeed.
+        </p>
+        <p>
+          <strong>Cost:</strong> the smallest sum of caller-declared positive
+          action costs among supported nonce invalidations and single-slot
+          lockdown calls. These units are not dollars or gas. A bounded
+          exhaustive search returns an explicit limit error rather than
+          declaring a large problem impossible.
+        </p>
+        <p>
+          <strong>Timing:</strong> the entire repair precedes every third-party
+          action, with time frozen. Separate transactions are not atomic; an
+          attacker can act first or between them. Verify deployment, current
+          state and calldata before any real signing.
+        </p>
+        <p>
+          <strong>Research:</strong> revocation, selective cancellation and
+          search algorithms already exist. This experimental implementation
+          investigates constrained repair planning and its explanations. No
+          first-ever invention, independent security audit or wallet-safety
+          guarantee is claimed.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <a href="/exposure">Exposure Map</a
+      ><a href="/repair-research.md">Model & prior art</a
+      ><a href="/repair-fixtures.json">Expired examples</a
+      ><a href="/repair-chain.json">Local EVM evidence</a
+      ><a href="https://github.com/karabasprank-dot/korp-txcert-competition"
+        >Korp source</a
+      ><span>AI-assisted · No real funds</span>
+    </footer>
+    <script type="module" src="/repair.js"></script>
+  </body>
+</html>

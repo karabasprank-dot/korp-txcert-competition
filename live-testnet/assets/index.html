@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>Korp · Live testnet</title
+  ><style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #101411;
+      color: #eff2e9;
+      font: 17px system-ui;
+    }
+    main {
+      max-width: 900px;
+      margin: auto;
+      padding: 40px 22px;
+    }
+    small {
+      color: #d9f49a;
+    }
+    h1 {
+      font-size: clamp(34px, 6vw, 60px);
+      line-height: 1.08;
+    }
+    p {
+      color: #b8c1b4;
+      line-height: 1.65;
+    }
+    .box {
+      background: #1d231d;
+      border: 1px solid #3d4939;
+      border-radius: 18px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    label {
+      display: block;
+      margin: 18px 0 6px;
+    }
+    input,
+    button {
+      font: inherit;
+      border-radius: 9px;
+      padding: 12px;
+      width: 100%;
+    }
+    input {
+      background: #111611;
+      color: white;
+      border: 1px solid #5b6655;
+    }
+    button {
+      background: #d9f49a;
+      color: #17200e;
+      border: 0;
+      cursor: pointer;
+      margin-top: 18px;
+    }
+    button:disabled {
+      opacity: 0.5;
+    }
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+    }
+    a {
+      color: #d9f49a;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <main><p style="padding:14px;background:#173b35;border-radius:10px"><a href="/repair" style="color:#a3e8d0">Korp Repair Planner — block unwanted permissions and preserve the wanted sequence →</a></p><p style="padding:14px;background:#173b35;border-radius:10px"><a href="/exposure" style="color:#a3e8d0">New research: Korp Exposure Map — analyze signed spending permissions →</a></p><p style="padding:14px;background:#173b35;border-radius:10px"><a href="/promise" style="color:#a3e8d0">Korp Promise Receipt — test our experimental protocol →</a></p>
+    <small>KORP / LIVE EVM TESTNETS</small>
+    <h1>Check a real testnet address.<br />Evaluate a payment policy.</h1>
+    <p>
+      Fresh policy evaluation on every check, with live blockchain reads for
+      requests that pass. Free to try. This playground does not sign or send
+      funds and does not enforce the prototype's persistent spending budget.
+    </p>
+    <div class="box">
+      <form id="form">
+        <label for="network">Test network</label
+        ><select id="network" style="padding: 12px; width: 100%; font: inherit">
+          <option value="84532">Base Sepolia</option>
+          <option value="11155111">Ethereum Sepolia</option>
+          <option value="421614">Arbitrum Sepolia</option>
+          <option value="11155420">Optimism Sepolia</option>
+        </select>
+        <label for="from">Sender public address</label
+        ><input
+          id="from"
+          value="0x2222222222222222222222222222222222222222"
+          required
+          pattern="0x[0-9a-fA-F]{40}"
+        /><label for="to">Recipient public address</label
+        ><input
+          id="to"
+          value="0x3333333333333333333333333333333333333333"
+          required
+          pattern="0x[0-9a-fA-F]{40}"
+        />
+        <div class="row">
+          <div>
+            <label for="amount">Proposed transfer (test ETH)</label
+            ><input id="amount" value="0.000001" required inputmode="decimal" />
+          </div>
+          <div>
+            <label for="limit">Your per-transfer limit (test ETH)</label
+            ><input id="limit" value="0.000002" required inputmode="decimal" />
+          </div>
+        </div>
+        <button id="run">Check live testnet</button>
+      </form>
+      <p>
+        Addresses are sent to this service and the selected network’s public RPC
+        for the check. Never enter a private key or recovery phrase.
+      </p>
+    </div>
+    <div class="box" aria-live="polite">
+      <strong id="status">Ready</strong>
+      <p id="summary">
+        Try an amount above the limit to see a fresh rejection.
+      </p>
+      <pre id="result"></pre>
+    </div>
+    <p>
+      Four EVM test networks only. ETH here is a test asset, not real-money ETH.
+      A PASS means these supplied policy rules passed; it does not mean the
+      transaction is safe or guaranteed to succeed. No wallet connection
+      required.
+    </p>
+    <p>
+      <a href="https://korp-txcert-proof-lab.mute-cell-557f.workers.dev"
+        >Recorded budget-signer evidence →</a
+      >
+    </p>
+  <p><a href="https://sepolia.basescan.org/tx/0x253006ca04b98c1870b152f6e13f510ea4a2e2092c19893ce65ebbae7b6c1c61">Verified Base Sepolia payment receipt</a> · <a href="https://github.com/karabasprank-dot/korp-txcert-competition">Source and scope</a></p><p>Receipt from the separate certificate API: 0.01 test USDC, operator test. This playground does not send transactions.</p><p style="padding:18px 0"><a href="https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/pilot.html">New: verified x402 cumulative-budget pilot →</a></p></main>
+  <script>
+    const el = (id) => document.getElementById(id);
+    function wei(s) {
+      if (!/^(0|[1-9][0-9]{0,30})(\.[0-9]{1,18})?$/.test(s))
+        throw Error(
+          "Use a nonnegative decimal with at most 18 decimal places.",
+        );
+      const [a, b = ""] = s.split(".");
+      return (BigInt(a) * 10n ** 18n + BigInt(b.padEnd(18, "0"))).toString();
+    }
+    el("form").onsubmit = async (e) => {
+      e.preventDefault();
+      el("run").disabled = true;
+      el("status").textContent = "Checking…";
+      el("result").textContent = "";
+      try {
+        const to = el("to").value.trim();
+        const request = {
+          chainId: Number(el("network").value),
+          from: el("from").value.trim(),
+          transaction: {
+            to,
+            data: "0x",
+            value: wei(el("amount").value.trim()),
+          },
+          policy: {
+            expectedAction: "native-transfer",
+            allowedRecipients: [to],
+            allowedSpenders: [],
+            maxNativeValueWei: wei(el("limit").value.trim()),
+            maxTokenSpend: [],
+            allowUnlimitedApproval: false,
+            allowUnknownCalls: false,
+          },
+        };
+        const response = await fetch("/api/check", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(request),
+          signal: AbortSignal.timeout(15000),
+        });
+        const data = await response.json();
+        if (!response.ok && !data.evaluation)
+          throw Error(data.error || "Check failed");
+        el("status").textContent = response.ok
+          ? data.evaluation.decision
+          : "Network unavailable — policy result only";
+        el("summary").textContent = data.chain
+          ? "Observed block " +
+            data.chain.block +
+            " · balance " +
+            data.chain.balanceWei +
+            " wei · pending nonce " +
+            data.chain.pendingNonce +
+            ". No funds sent."
+          : data.notice;
+        el("result").textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        el("status").textContent = "Unable to complete check";
+        el("summary").textContent = err.message;
+      } finally {
+        el("run").disabled = false;
+      }
+    };
+  </script>
+</html>

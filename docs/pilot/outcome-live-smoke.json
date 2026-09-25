@@ -1,0 +1,29 @@
+{
+  "at": "2026-09-25T06:56:46.624Z",
+  "service": "https://korp-txcert-live-testnet.mute-cell-557f.workers.dev",
+  "version": "7997e689-68b5-441e-aff0-bc9de8256124",
+  "mode": "synthetic read-only checks; no payments",
+  "cases": [
+    {
+      "name": "good",
+      "decision": "checks_passed",
+      "verified": true
+    },
+    {
+      "name": "stale",
+      "decision": "checks_failed",
+      "verified": true
+    },
+    {
+      "name": "wrong_chain",
+      "decision": "checks_failed",
+      "verified": true
+    },
+    {
+      "name": "missing",
+      "decision": "response_missing",
+      "verified": true
+    }
+  ],
+  "health": "ok"
+}

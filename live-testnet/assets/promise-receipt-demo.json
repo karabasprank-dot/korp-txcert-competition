@@ -1,0 +1,159 @@
+{
+  "at": "2026-09-25T09:49:41.007Z",
+  "mode": "local cryptographic experiment; unfunded ephemeral keys; expired authorization; no settlement or network calls",
+  "prototype": "Korp Promise Receipt v0",
+  "proof": {
+    "terms": {
+      "version": 1,
+      "chainId": 84532,
+      "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      "payer": "0xb009a4bfB3BdE6376f54915Bd7807e213484625B",
+      "payTo": "0x0bdE0B03A04DE0089BDEb92B88fA549E5b20B867",
+      "merchantSigner": "0x055DCBe6ff93841a962A3Bb96620C6c9791D4D36",
+      "amount": "10000",
+      "validAfter": "0",
+      "validBefore": "2",
+      "requestCommitment": "0x03c4c9dbdafeb0c0ff254a3a0e4dee153f9fa793403ef2be7a61c5db5bd82605",
+      "fields": [
+        "chainId",
+        "customer",
+        "position",
+        "internalNote"
+      ],
+      "rule": {
+        "fieldIndex": 0,
+        "equals": 84532
+      }
+    },
+    "merchantSignature": "0x8a06d88fffad47532f5ad4d1c95f094d3a42840d5d2b5f761b043aaacf12abb9401b8361a0661e456d3328ee2bdd0831eaec452b8e076e85be631f468f2b5d601b",
+    "nonceSalt": "0x40c358581c9cf3f78cb6853ad0a3f44ee1a0de0117c2e2372eb5496bdae048dc",
+    "authorizationSignature": "0x521bc4ea1e1c34e5e9bcc0d866ae8711fe19595bf00003ae2e27d1ad776605c40e897faf35e445aed2b47ebdc113eb7b679c7cd7d7257875d4ba820e9368e5571c",
+    "responseRoot": "0x389836b3cd1412dad6cba27ecedd84003498cdf704b93f555c65aee2dc280efa",
+    "deliverySignature": "0xb9425d622b630235a51e53902cb279a6df3c6cf44c831e972b082d49ef1bff0001dc50212e3c027bd36eb920a704543b63cf31545c1a15939e971006fca343f01b",
+    "disclosure": {
+      "index": 0,
+      "present": true,
+      "value": 1,
+      "salt": "0x8867bed9c5424809e66608aa12fb07773d39e47831323998afd236c781e0161b",
+      "siblings": [
+        "0x38126b63a8daced042354e2ed34107308bc637fb2da2f1e6f98bb8e139b4275b",
+        "0xe884a0aa5163ebdb4b633ed18178c93ffdae7b50c5bf5a2654dafdd2659017ea"
+      ]
+    }
+  },
+  "tamperedProofs": {
+    "rewrittenMerchantPromise": {
+      "terms": {
+        "version": 1,
+        "chainId": 84532,
+        "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+        "payer": "0xb009a4bfB3BdE6376f54915Bd7807e213484625B",
+        "payTo": "0x0bdE0B03A04DE0089BDEb92B88fA549E5b20B867",
+        "merchantSigner": "0x055DCBe6ff93841a962A3Bb96620C6c9791D4D36",
+        "amount": "10000",
+        "validAfter": "0",
+        "validBefore": "2",
+        "requestCommitment": "0x03c4c9dbdafeb0c0ff254a3a0e4dee153f9fa793403ef2be7a61c5db5bd82605",
+        "fields": [
+          "chainId",
+          "customer",
+          "position",
+          "internalNote"
+        ],
+        "rule": {
+          "fieldIndex": 0,
+          "equals": 1
+        }
+      },
+      "merchantSignature": "0x0be5b108a343229d1a5cc1e071d929e4bff4274f4ab6e9ce60f83499b41f078c7dd46f7d2844055bae632c3a29d9016fb687ea8cc538b966ef73637b133d17741b",
+      "nonceSalt": "0x40c358581c9cf3f78cb6853ad0a3f44ee1a0de0117c2e2372eb5496bdae048dc",
+      "authorizationSignature": "0x521bc4ea1e1c34e5e9bcc0d866ae8711fe19595bf00003ae2e27d1ad776605c40e897faf35e445aed2b47ebdc113eb7b679c7cd7d7257875d4ba820e9368e5571c",
+      "responseRoot": "0x389836b3cd1412dad6cba27ecedd84003498cdf704b93f555c65aee2dc280efa",
+      "deliverySignature": "0xb9425d622b630235a51e53902cb279a6df3c6cf44c831e972b082d49ef1bff0001dc50212e3c027bd36eb920a704543b63cf31545c1a15939e971006fca343f01b",
+      "disclosure": {
+        "index": 0,
+        "present": true,
+        "value": 1,
+        "salt": "0x8867bed9c5424809e66608aa12fb07773d39e47831323998afd236c781e0161b",
+        "siblings": [
+          "0x38126b63a8daced042354e2ed34107308bc637fb2da2f1e6f98bb8e139b4275b",
+          "0xe884a0aa5163ebdb4b633ed18178c93ffdae7b50c5bf5a2654dafdd2659017ea"
+        ]
+      }
+    },
+    "fabricatedBuyerResponse": {
+      "terms": {
+        "version": 1,
+        "chainId": 84532,
+        "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+        "payer": "0xb009a4bfB3BdE6376f54915Bd7807e213484625B",
+        "payTo": "0x0bdE0B03A04DE0089BDEb92B88fA549E5b20B867",
+        "merchantSigner": "0x055DCBe6ff93841a962A3Bb96620C6c9791D4D36",
+        "amount": "10000",
+        "validAfter": "0",
+        "validBefore": "2",
+        "requestCommitment": "0x03c4c9dbdafeb0c0ff254a3a0e4dee153f9fa793403ef2be7a61c5db5bd82605",
+        "fields": [
+          "chainId",
+          "customer",
+          "position",
+          "internalNote"
+        ],
+        "rule": {
+          "fieldIndex": 0,
+          "equals": 84532
+        }
+      },
+      "merchantSignature": "0x8a06d88fffad47532f5ad4d1c95f094d3a42840d5d2b5f761b043aaacf12abb9401b8361a0661e456d3328ee2bdd0831eaec452b8e076e85be631f468f2b5d601b",
+      "nonceSalt": "0x40c358581c9cf3f78cb6853ad0a3f44ee1a0de0117c2e2372eb5496bdae048dc",
+      "authorizationSignature": "0x521bc4ea1e1c34e5e9bcc0d866ae8711fe19595bf00003ae2e27d1ad776605c40e897faf35e445aed2b47ebdc113eb7b679c7cd7d7257875d4ba820e9368e5571c",
+      "responseRoot": "0x389836b3cd1412dad6cba27ecedd84003498cdf704b93f555c65aee2dc280efa",
+      "deliverySignature": "0xb9425d622b630235a51e53902cb279a6df3c6cf44c831e972b082d49ef1bff0001dc50212e3c027bd36eb920a704543b63cf31545c1a15939e971006fca343f01b",
+      "disclosure": {
+        "index": 0,
+        "present": true,
+        "value": 56,
+        "salt": "0x8867bed9c5424809e66608aa12fb07773d39e47831323998afd236c781e0161b",
+        "siblings": [
+          "0x38126b63a8daced042354e2ed34107308bc637fb2da2f1e6f98bb8e139b4275b",
+          "0xe884a0aa5163ebdb4b633ed18178c93ffdae7b50c5bf5a2654dafdd2659017ea"
+        ]
+      }
+    }
+  },
+  "trust": {
+    "payer": "0xb009a4bfB3BdE6376f54915Bd7807e213484625B",
+    "payTo": "0x0bdE0B03A04DE0089BDEb92B88fA549E5b20B867",
+    "merchantSigner": "0x055DCBe6ff93841a962A3Bb96620C6c9791D4D36"
+  },
+  "result": {
+    "valid": true,
+    "claim": "merchant_signed_field_violates_payment_bound_promise",
+    "field": "chainId",
+    "expected": 84532,
+    "observed": 1,
+    "missing": false,
+    "paymentNonce": "0x8bc241d0ff0760458b50c1d35a845e4d210057d6c971b2c289d02e9d5ac7d362",
+    "otherFieldValuesDisclosed": false,
+    "settlementVerified": false,
+    "refundEntitlementVerified": false
+  },
+  "adversarialChecks": {
+    "rewrittenMerchantPromise": {
+      "valid": false,
+      "reason": "PAYMENT_AUTHORIZATION_NOT_BOUND_TO_PROMISE"
+    },
+    "fabricatedBuyerResponse": {
+      "valid": false,
+      "reason": "INVALID_DISCLOSURE_PATH"
+    }
+  },
+  "undisclosedSyntheticValuesAbsent": true,
+  "limits": [
+    "Not proof of settlement",
+    "Not zero knowledge or unlinkable",
+    "No refund or arbitration",
+    "Seller must participate",
+    "Novelty not established"
+  ]
+}

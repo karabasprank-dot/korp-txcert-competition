@@ -1,0 +1,152 @@
+{
+  "measuredAt": "2026-09-17T13:02:02.222Z",
+  "method": "Sequential HTTPS requests from the developer Mac; six samples per endpoint per service. Includes network latency. Unpaid requests only. Not an uptime SLA, security audit, global benchmark or settlement test.",
+  "services": [
+    {
+      "origin": "https://korp-txcert.mute-cell-557f.workers.dev",
+      "endpoints": [
+        {
+          "path": "/health",
+          "method": "GET",
+          "expectedStatus": 200,
+          "samples": [
+            {
+              "status": 200,
+              "milliseconds": 726
+            },
+            {
+              "status": 200,
+              "milliseconds": 144
+            },
+            {
+              "status": 200,
+              "milliseconds": 140
+            },
+            {
+              "status": 200,
+              "milliseconds": 147
+            },
+            {
+              "status": 200,
+              "milliseconds": 144
+            },
+            {
+              "status": 200,
+              "milliseconds": 144
+            }
+          ],
+          "successes": 6,
+          "p50Milliseconds": 144,
+          "p95Milliseconds": 726
+        },
+        {
+          "path": "/v1/certify",
+          "method": "POST",
+          "expectedStatus": 402,
+          "samples": [
+            {
+              "status": 402,
+              "milliseconds": 523
+            },
+            {
+              "status": 402,
+              "milliseconds": 787
+            },
+            {
+              "status": 402,
+              "milliseconds": 154
+            },
+            {
+              "status": 402,
+              "milliseconds": 149
+            },
+            {
+              "status": 402,
+              "milliseconds": 150
+            },
+            {
+              "status": 402,
+              "milliseconds": 151
+            }
+          ],
+          "successes": 6,
+          "p50Milliseconds": 151,
+          "p95Milliseconds": 787
+        }
+      ]
+    },
+    {
+      "origin": "https://korp-txcert-sepolia.mute-cell-557f.workers.dev",
+      "endpoints": [
+        {
+          "path": "/health",
+          "method": "GET",
+          "expectedStatus": 200,
+          "samples": [
+            {
+              "status": 200,
+              "milliseconds": 581
+            },
+            {
+              "status": 200,
+              "milliseconds": 131
+            },
+            {
+              "status": 200,
+              "milliseconds": 135
+            },
+            {
+              "status": 200,
+              "milliseconds": 126
+            },
+            {
+              "status": 200,
+              "milliseconds": 131
+            },
+            {
+              "status": 200,
+              "milliseconds": 132
+            }
+          ],
+          "successes": 6,
+          "p50Milliseconds": 131,
+          "p95Milliseconds": 581
+        },
+        {
+          "path": "/v1/certify",
+          "method": "POST",
+          "expectedStatus": 402,
+          "samples": [
+            {
+              "status": 402,
+              "milliseconds": 552
+            },
+            {
+              "status": 402,
+              "milliseconds": 1463
+            },
+            {
+              "status": 402,
+              "milliseconds": 153
+            },
+            {
+              "status": 402,
+              "milliseconds": 176
+            },
+            {
+              "status": 402,
+              "milliseconds": 178
+            },
+            {
+              "status": 402,
+              "milliseconds": 156
+            }
+          ],
+          "successes": 6,
+          "p50Milliseconds": 176,
+          "p95Milliseconds": 1463
+        }
+      ]
+    }
+  ]
+}

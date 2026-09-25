@@ -1,0 +1,158 @@
+[
+  {
+    "chainId": 84532,
+    "status": "200",
+    "result": {
+      "evaluation": {
+        "decision": "PASS",
+        "chainId": 84532,
+        "checks": [
+          {
+            "id": "SENDER_NOT_BURN",
+            "pass": true
+          },
+          {
+            "id": "TARGET_NOT_BURN",
+            "pass": true
+          },
+          {
+            "id": "NATIVE_VALUE_LIMIT",
+            "pass": true
+          },
+          {
+            "id": "RECIPIENT_ALLOWED",
+            "pass": true
+          }
+        ]
+      },
+      "networkState": "available",
+      "observedAt": "2026-09-25T06:09:23.590Z",
+      "chain": {
+        "chainId": 84532,
+        "block": "47274137",
+        "balanceWei": "559452600000000023",
+        "pendingNonce": "0"
+      },
+      "certificate": null,
+      "broadcast": false,
+      "notice": "Policy evaluation only. No certificate, signature, budget enforcement or transfer. RPC state can change."
+    }
+  },
+  {
+    "chainId": 11155111,
+    "status": "200",
+    "result": {
+      "evaluation": {
+        "decision": "PASS",
+        "chainId": 11155111,
+        "checks": [
+          {
+            "id": "SENDER_NOT_BURN",
+            "pass": true
+          },
+          {
+            "id": "TARGET_NOT_BURN",
+            "pass": true
+          },
+          {
+            "id": "NATIVE_VALUE_LIMIT",
+            "pass": true
+          },
+          {
+            "id": "RECIPIENT_ALLOWED",
+            "pass": true
+          }
+        ]
+      },
+      "networkState": "available",
+      "observedAt": "2026-09-25T06:09:24.112Z",
+      "chain": {
+        "chainId": 11155111,
+        "block": "11777325",
+        "balanceWei": "2158520922514060242",
+        "pendingNonce": "0"
+      },
+      "certificate": null,
+      "broadcast": false,
+      "notice": "Policy evaluation only. No certificate, signature, budget enforcement or transfer. RPC state can change."
+    }
+  },
+  {
+    "chainId": 421614,
+    "status": "200",
+    "result": {
+      "evaluation": {
+        "decision": "PASS",
+        "chainId": 421614,
+        "checks": [
+          {
+            "id": "SENDER_NOT_BURN",
+            "pass": true
+          },
+          {
+            "id": "TARGET_NOT_BURN",
+            "pass": true
+          },
+          {
+            "id": "NATIVE_VALUE_LIMIT",
+            "pass": true
+          },
+          {
+            "id": "RECIPIENT_ALLOWED",
+            "pass": true
+          }
+        ]
+      },
+      "networkState": "available",
+      "observedAt": "2026-09-25T06:09:23.725Z",
+      "chain": {
+        "chainId": 421614,
+        "block": "312490912",
+        "balanceWei": "28950576813444030000",
+        "pendingNonce": "0"
+      },
+      "certificate": null,
+      "broadcast": false,
+      "notice": "Policy evaluation only. No certificate, signature, budget enforcement or transfer. RPC state can change."
+    }
+  },
+  {
+    "chainId": 11155420,
+    "status": "200",
+    "result": {
+      "evaluation": {
+        "decision": "PASS",
+        "chainId": 11155420,
+        "checks": [
+          {
+            "id": "SENDER_NOT_BURN",
+            "pass": true
+          },
+          {
+            "id": "TARGET_NOT_BURN",
+            "pass": true
+          },
+          {
+            "id": "NATIVE_VALUE_LIMIT",
+            "pass": true
+          },
+          {
+            "id": "RECIPIENT_ALLOWED",
+            "pass": true
+          }
+        ]
+      },
+      "networkState": "available",
+      "observedAt": "2026-09-25T06:09:24.155Z",
+      "chain": {
+        "chainId": 11155420,
+        "block": "49257011",
+        "balanceWei": "3000000000000000",
+        "pendingNonce": "0"
+      },
+      "certificate": null,
+      "broadcast": false,
+      "notice": "Policy evaluation only. No certificate, signature, budget enforcement or transfer. RPC state can change."
+    }
+  }
+]

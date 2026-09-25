@@ -1,0 +1,571 @@
+{
+  "generatedAt": "2026-09-25T10:53:29.288Z",
+  "mode": "synthetic expired EOA signatures; historical timestamp 1; no money",
+  "examples": [
+    {
+      "id": "triangle",
+      "title": "Three conflicting batches",
+      "description": "A uses X+Y, B uses Y+Z, C uses X+Z. Any two collide on a nonce. All weights are one synthetic risk unit.",
+      "input": {
+        "domain": {
+          "chainId": 31337,
+          "verifyingContract": "0x0000000000000000000000000000000000000064"
+        },
+        "owner": "0x7d424a592054883BE2938e0732469FDE9f0bDbA5",
+        "asOfTimestamp": 1,
+        "assets": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "weight": "1"
+          }
+        ],
+        "slots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "permits": [
+          {
+            "id": "A",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000001",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              },
+              {
+                "token": "0x0000000000000000000000000000000000000002",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              }
+            ],
+            "signature": "0xe0dcfec019be72faa897e93e8292dd9a794f14eed22da610b0895138a61a4b316f0ff555121a5eb371584978556f0b1ab229ed5320d1b8ec701ab51d4e69d4841b"
+          },
+          {
+            "id": "B",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000002",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              },
+              {
+                "token": "0x0000000000000000000000000000000000000003",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              }
+            ],
+            "signature": "0xca67a51793cd14f398508e9c096bffef3fc752d1fc0c6717144ca9dfb83d489865ef098cda92842338de9e335d0e78378a11a1aa8820ec811de72638a25e8e551b"
+          },
+          {
+            "id": "C",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000001",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              },
+              {
+                "token": "0x0000000000000000000000000000000000000003",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              }
+            ],
+            "signature": "0x45e555c5d6b1942f7e8b035bdbdf458b4962dd3e310cf8b15dcaab90454e92661de15000570b3a3ebd113b466ff29e8595a539e76a31addf0c9d3c05cf7724b21b"
+          }
+        ]
+      },
+      "expected": {
+        "version": "korp-exposure-map-v1",
+        "inputHash": "0x0f32451929a88a9efc6ac8f49d4c31e78bd9f1cc7ea927fe1e937928044dfbd5",
+        "unit": "synthetic-budget-units",
+        "maxAdditional": "6",
+        "baselineAllowance": "0",
+        "maxTotal": "6",
+        "witness": [
+          "A"
+        ],
+        "reachableStateCount": 4,
+        "naive": {
+          "sumOfSignedGrants": "18",
+          "sumOfSignedGrantsPlusBaseline": "18",
+          "perSlotNonceMax": "9",
+          "perSlotNonceMaxPlusBaseline": "9"
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and inventory; completeness, chain provenance, finality, and owner account code are not verified.",
+          "EOA ECDSA signatures only; no ERC-1271, ERC-6492, or contract-wallet validation.",
+          "One fixed chain and Permit2 AllowanceTransfer deployment with official, unchanged contract semantics.",
+          "Frozen block timestamp: this is not exposure over future time, reorgs, new signatures, owner nonce invalidations, or policy changes.",
+          "Colluding spenders may drain every finite active allowance immediately; future token top-ups and adequate root ERC-20 approval are assumed available.",
+          "Initial allowances are drained before permits; every reachable fresh allowance is drained before any later grant.",
+          "Weights are explicit synthetic budget units per atomic token unit, not token prices or exchange-rate predictions; gas is excluded.",
+          "At most 12 signed batches, 16 snapshot slots and 16 assets; duplicate batch tokens, unlimited allowances, and nonce wrap are unsupported."
+        ]
+      }
+    },
+    {
+      "id": "sequential",
+      "title": "A second grant restores spending",
+      "description": "After draining A, nonce 1 enables B and restores the allowances. Counting only the final allowance misses the earlier withdrawal.",
+      "input": {
+        "domain": {
+          "chainId": 31337,
+          "verifyingContract": "0x0000000000000000000000000000000000000064"
+        },
+        "owner": "0x7d424a592054883BE2938e0732469FDE9f0bDbA5",
+        "asOfTimestamp": 1,
+        "assets": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "weight": "1"
+          }
+        ],
+        "slots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "permits": [
+          {
+            "id": "A",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000001",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              },
+              {
+                "token": "0x0000000000000000000000000000000000000002",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              }
+            ],
+            "signature": "0xe0dcfec019be72faa897e93e8292dd9a794f14eed22da610b0895138a61a4b316f0ff555121a5eb371584978556f0b1ab229ed5320d1b8ec701ab51d4e69d4841b"
+          },
+          {
+            "id": "B",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000001",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "1"
+              },
+              {
+                "token": "0x0000000000000000000000000000000000000002",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "1"
+              }
+            ],
+            "signature": "0x5a85f9788410435e17ee863f78528a65bfb3e7d1aa19d7066bacec28a3720032182b397e0c0928517e87f3b4c391c9040ca8cb3adb78bd908aeee880704c40c01c"
+          }
+        ]
+      },
+      "expected": {
+        "version": "korp-exposure-map-v1",
+        "inputHash": "0x97fef09d0007a25a947a71e6f95c3de2bab372beaeec525c5e269b8335ea7bf5",
+        "unit": "synthetic-budget-units",
+        "maxAdditional": "12",
+        "baselineAllowance": "0",
+        "maxTotal": "12",
+        "witness": [
+          "A",
+          "B"
+        ],
+        "reachableStateCount": 3,
+        "naive": {
+          "sumOfSignedGrants": "12",
+          "sumOfSignedGrantsPlusBaseline": "12",
+          "perSlotNonceMax": "12",
+          "perSlotNonceMaxPlusBaseline": "12"
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and inventory; completeness, chain provenance, finality, and owner account code are not verified.",
+          "EOA ECDSA signatures only; no ERC-1271, ERC-6492, or contract-wallet validation.",
+          "One fixed chain and Permit2 AllowanceTransfer deployment with official, unchanged contract semantics.",
+          "Frozen block timestamp: this is not exposure over future time, reorgs, new signatures, owner nonce invalidations, or policy changes.",
+          "Colluding spenders may drain every finite active allowance immediately; future token top-ups and adequate root ERC-20 approval are assumed available.",
+          "Initial allowances are drained before permits; every reachable fresh allowance is drained before any later grant.",
+          "Weights are explicit synthetic budget units per atomic token unit, not token prices or exchange-rate predictions; gas is excluded.",
+          "At most 12 signed batches, 16 snapshot slots and 16 assets; duplicate batch tokens, unlimited allowances, and nonce wrap are unsupported."
+        ]
+      }
+    },
+    {
+      "id": "cycle",
+      "title": "Valid signatures, impossible order",
+      "description": "A needs Y at nonce 1, but B needs X at nonce 1. Both start at zero. Neither batch can execute, although both signatures verify.",
+      "input": {
+        "domain": {
+          "chainId": 31337,
+          "verifyingContract": "0x0000000000000000000000000000000000000064"
+        },
+        "owner": "0x7d424a592054883BE2938e0732469FDE9f0bDbA5",
+        "asOfTimestamp": 1,
+        "assets": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "weight": "1"
+          }
+        ],
+        "slots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "permits": [
+          {
+            "id": "A",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000001",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              },
+              {
+                "token": "0x0000000000000000000000000000000000000002",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "1"
+              }
+            ],
+            "signature": "0x83859da4c1dbe3114d5a1fccd87a5d8e276146032a2e5d6e542229b507643ddb50ef4031fdca960ada8ca9564948145f59a170d16ffb019cd6992174198c93be1b"
+          },
+          {
+            "id": "B",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000001",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "1"
+              },
+              {
+                "token": "0x0000000000000000000000000000000000000002",
+                "amount": "3",
+                "expiration": "2",
+                "nonce": "0"
+              }
+            ],
+            "signature": "0xb6bdde91e458ffdc69523602c74d16c9423a558a660191f97258b444742c4eec5abd7269c6cc43d343cbf20845007ed7481b09e482f50f938a6df6475f322cd61c"
+          }
+        ]
+      },
+      "expected": {
+        "version": "korp-exposure-map-v1",
+        "inputHash": "0xd4a252588d713aa06d589c607f8bf0351cbb29a034abde4937f9bb243767b449",
+        "unit": "synthetic-budget-units",
+        "maxAdditional": "0",
+        "baselineAllowance": "0",
+        "maxTotal": "0",
+        "witness": [],
+        "reachableStateCount": 1,
+        "naive": {
+          "sumOfSignedGrants": "12",
+          "sumOfSignedGrantsPlusBaseline": "12",
+          "perSlotNonceMax": "12",
+          "perSlotNonceMaxPlusBaseline": "12"
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and inventory; completeness, chain provenance, finality, and owner account code are not verified.",
+          "EOA ECDSA signatures only; no ERC-1271, ERC-6492, or contract-wallet validation.",
+          "One fixed chain and Permit2 AllowanceTransfer deployment with official, unchanged contract semantics.",
+          "Frozen block timestamp: this is not exposure over future time, reorgs, new signatures, owner nonce invalidations, or policy changes.",
+          "Colluding spenders may drain every finite active allowance immediately; future token top-ups and adequate root ERC-20 approval are assumed available.",
+          "Initial allowances are drained before permits; every reachable fresh allowance is drained before any later grant.",
+          "Weights are explicit synthetic budget units per atomic token unit, not token prices or exchange-rate predictions; gas is excluded.",
+          "At most 12 signed batches, 16 snapshot slots and 16 assets; duplicate batch tokens, unlimited allowances, and nonce wrap are unsupported."
+        ]
+      }
+    },
+    {
+      "id": "latent",
+      "title": "Zero allowance can be restored",
+      "description": "The current allowance is zero, but an unused signed permit can restore seven units. A wallet balance of zero would not invalidate that signature either.",
+      "input": {
+        "domain": {
+          "chainId": 31337,
+          "verifyingContract": "0x0000000000000000000000000000000000000064"
+        },
+        "owner": "0x7d424a592054883BE2938e0732469FDE9f0bDbA5",
+        "asOfTimestamp": 1,
+        "assets": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "weight": "1"
+          }
+        ],
+        "slots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "permits": [
+          {
+            "id": "Old-permit",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000001",
+                "amount": "7",
+                "expiration": "2",
+                "nonce": "0"
+              }
+            ],
+            "signature": "0xce753b39b6a3f930a78f4ef9b8ee593947e51b25868951b8d12c6d1e02e028324e5e6f7369e02bfbe0a32e5f22c908fbcfd58d8013c2be7e4c41b975f8d3dcf51c"
+          }
+        ]
+      },
+      "expected": {
+        "version": "korp-exposure-map-v1",
+        "inputHash": "0x86c50fc0316451956b7fef0c1cfa96d8e795a11ce43bad61fb45f8d0ec5caefb",
+        "unit": "synthetic-budget-units",
+        "maxAdditional": "7",
+        "baselineAllowance": "0",
+        "maxTotal": "7",
+        "witness": [
+          "Old-permit"
+        ],
+        "reachableStateCount": 2,
+        "naive": {
+          "sumOfSignedGrants": "7",
+          "sumOfSignedGrantsPlusBaseline": "7",
+          "perSlotNonceMax": "7",
+          "perSlotNonceMaxPlusBaseline": "7"
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and inventory; completeness, chain provenance, finality, and owner account code are not verified.",
+          "EOA ECDSA signatures only; no ERC-1271, ERC-6492, or contract-wallet validation.",
+          "One fixed chain and Permit2 AllowanceTransfer deployment with official, unchanged contract semantics.",
+          "Frozen block timestamp: this is not exposure over future time, reorgs, new signatures, owner nonce invalidations, or policy changes.",
+          "Colluding spenders may drain every finite active allowance immediately; future token top-ups and adequate root ERC-20 approval are assumed available.",
+          "Initial allowances are drained before permits; every reachable fresh allowance is drained before any later grant.",
+          "Weights are explicit synthetic budget units per atomic token unit, not token prices or exchange-rate predictions; gas is excluded.",
+          "At most 12 signed batches, 16 snapshot slots and 16 assets; duplicate batch tokens, unlimited allowances, and nonce wrap are unsupported."
+        ]
+      }
+    },
+    {
+      "id": "remaining",
+      "title": "Used permit, live allowance",
+      "description": "The nonce advanced, so the old permit cannot execute again. Five units of its existing allowance are still available to the spender.",
+      "input": {
+        "domain": {
+          "chainId": 31337,
+          "verifyingContract": "0x0000000000000000000000000000000000000064"
+        },
+        "owner": "0x7d424a592054883BE2938e0732469FDE9f0bDbA5",
+        "asOfTimestamp": 1,
+        "assets": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "weight": "1"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "weight": "1"
+          }
+        ],
+        "slots": [
+          {
+            "token": "0x0000000000000000000000000000000000000001",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "1",
+            "currentAllowance": "5",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000002",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          },
+          {
+            "token": "0x0000000000000000000000000000000000000003",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "nonce": "0",
+            "currentAllowance": "0",
+            "expiration": "2"
+          }
+        ],
+        "permits": [
+          {
+            "id": "Used-permit",
+            "spender": "0x0000000000000000000000000000000000000065",
+            "sigDeadline": "2",
+            "details": [
+              {
+                "token": "0x0000000000000000000000000000000000000001",
+                "amount": "5",
+                "expiration": "2",
+                "nonce": "0"
+              }
+            ],
+            "signature": "0x16ae1c90d67b5428b79e9da6a0417519067907c19a84a8f078c6a95eb2b4b6b63c31a85881655cc2b760752efb26544e5e73203ea3deb0c13c942dc46c1db3c51b"
+          }
+        ]
+      },
+      "expected": {
+        "version": "korp-exposure-map-v1",
+        "inputHash": "0x2f69fdaa489112eaf74a9576a7a14d3f4858858f3dd24ee3a4459fea41d1543c",
+        "unit": "synthetic-budget-units",
+        "maxAdditional": "0",
+        "baselineAllowance": "5",
+        "maxTotal": "5",
+        "witness": [],
+        "reachableStateCount": 1,
+        "naive": {
+          "sumOfSignedGrants": "5",
+          "sumOfSignedGrantsPlusBaseline": "10",
+          "perSlotNonceMax": "0",
+          "perSlotNonceMaxPlusBaseline": "5"
+        },
+        "modelLimits": [
+          "Caller-supplied snapshot and inventory; completeness, chain provenance, finality, and owner account code are not verified.",
+          "EOA ECDSA signatures only; no ERC-1271, ERC-6492, or contract-wallet validation.",
+          "One fixed chain and Permit2 AllowanceTransfer deployment with official, unchanged contract semantics.",
+          "Frozen block timestamp: this is not exposure over future time, reorgs, new signatures, owner nonce invalidations, or policy changes.",
+          "Colluding spenders may drain every finite active allowance immediately; future token top-ups and adequate root ERC-20 approval are assumed available.",
+          "Initial allowances are drained before permits; every reachable fresh allowance is drained before any later grant.",
+          "Weights are explicit synthetic budget units per atomic token unit, not token prices or exchange-rate predictions; gas is excluded.",
+          "At most 12 signed batches, 16 snapshot slots and 16 assets; duplicate batch tokens, unlimited allowances, and nonce wrap are unsupported."
+        ]
+      }
+    }
+  ]
+}

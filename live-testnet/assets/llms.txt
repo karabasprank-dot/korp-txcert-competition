@@ -1,0 +1,22 @@
+# Korp research prototypes
+
+- Promise Receipt: /promise
+- Protocol and prior art: /promise-receipt-spec.md
+- Public synthetic vectors: /promise-receipt-demo.json
+- POST /api/promise-check accepts JSON {"scenario":"original"}, {"scenario":"rewritten-promise"} or {"scenario":"fabricated-response"}. Fixed expired test authorizations only. No wallets, funds, settlement or arbitrary proof uploads.
+- Basic outcome checking: /outcomes
+- Recorded separate public-testnet budget pilot: /pilot
+
+Promise Receipt is an experimental nonce-bound merchant-promise and selective breach-witness design. Novelty is unproven. A valid result is a narrow signature/commitment check, not settlement, merchant identity, semantic truth, refund entitlement or production safety. Source: https://github.com/karabasprank-dot/korp-txcert-competition
+
+Korp Exposure Map: /exposure
+Research: /exposure-research.md
+Public expired fixtures: /exposure-fixtures.json
+Isolated local EVM evidence: /exposure-chain.json
+Browser-only bounded Permit2 AllowanceTransfer exposure analyzer. No signature upload, no wallet scanning or revocation. Snapshot/inventory assumed; fixed-time model. Known nonce, signature and optimization primitives. No global novelty, patentability or priority claim. Promise Receipt nonce commitments overlap prior Roundhouse KYA, Warrant and VIC work.
+
+Korp Repair Planner: /repair
+Model and prior art: /repair-research.md
+Expired synthetic fixtures: /repair-fixtures.json
+Local EVM evidence: /repair-chain.json
+A browser-only constrained repair planner for supplied Permit2 AllowanceTransfer batches. Computes supported nonce invalidations and single-slot lockdown calls; blocks unwanted supplied permits along all reachable known orders, preserves a specified wanted sequence, and keeps explicitly cleared stored allowances zero. Minimum cost refers to declared synthetic per-action costs, not gas. Unsigned calldata only; no broadcasts, owner keys, emergency protection or public-chain verification. All repairs must precede third-party execution; real separate transactions are not atomic. Bounded search errors are distinct from impossibility. Recheck recomputes the same solver; snapshot comparison trusts the supplied data. No first-ever invention claim.

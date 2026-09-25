@@ -1,0 +1,23 @@
+{
+  "at": "2026-09-25T06:26:00.325Z",
+  "mode": "operator-test; Base Sepolia; no real money",
+  "status": "PASS",
+  "payments": [
+    {
+      "httpStatus": 200,
+      "transaction": "0x6bbceb1925b6d8beac7c3b7d6ac9cbdd1b160bfb9cdea24e9b730339d27d81b6",
+      "certificateVerified": true,
+      "onchainConfirmed": true
+    },
+    {
+      "httpStatus": 200,
+      "transaction": "0x40cfe7f85560136f9ba67345ed9d63718bee1ca34e4906837f1225c2906d9221",
+      "certificateVerified": true,
+      "onchainConfirmed": true
+    }
+  ],
+  "reserved": "20000",
+  "sentAuthorizations": 2,
+  "blockedBeforePayment": true,
+  "blockedAfterRestart": true
+}

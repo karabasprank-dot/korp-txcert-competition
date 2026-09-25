@@ -1,0 +1,12 @@
+{
+  "name": "korp-txcert-live-testnet",
+  "main": "../src/live-testnet.ts",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./assets",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
+  },
+}
