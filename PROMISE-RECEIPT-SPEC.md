@@ -2,6 +2,8 @@
 
 September 25, 2026. Experimental design and local demo; unaudited. Novelty and demand remain hypotheses.
 
+**Prior-art correction, September 25:** the expanded search found earlier signed-document/payment-nonce commitments in [Roundhouse KYA](https://roundhouseai.io/kya), contractual nonce binding in [Warrant SDK](https://pypi.org/project/warrant-sdk/0.1.1/), and optional invoice-hash nonce binding in [VIC](https://github.com/javierpmateos/verifiable-invoice-commitment). Nonce-based payment commitments are not a new invention by Korp. The full selective-contradiction combination is not established as unique either. The original proposal below is retained for an accurate research record.
+
 A buyer should be able to show that a merchant's signed response violates an agreed, mechanical requirement without publishing unrelated response values. The proposed contribution is binding those terms to an EIP-3009 payment authorization **through its nonce**, then carrying that binding into a selectively disclosed breach witness. EIP-712 signatures, hashes and Merkle proofs are existing primitives.
 
 ## Protocol
