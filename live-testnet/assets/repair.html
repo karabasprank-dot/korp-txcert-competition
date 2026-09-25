@@ -367,7 +367,9 @@
           A local planner, not an emergency protection service. It creates
           unsigned actions only. No wallet connection or broadcasts. Public
           examples contain expired synthetic signatures. A plan assumes every
-          repair completes before anyone uses a permission.
+          repair completes before anyone uses a permission. Owners with
+          contract code, including EIP-7702 delegated accounts, are
+          unsupported: Permit2 checks their signatures through ERC-1271.
         </p>
       </section>
       <div class="workspace">

@@ -387,7 +387,9 @@
             Analysis verifies EOA signatures, checks nonce dependencies, and
             explores all reachable permit subsets within the 12-permit limit. A
             zero result applies only to these supplied permissions and
-            assumptions.
+            assumptions. Owners with contract code, including EIP-7702
+            delegated accounts, are unsupported: Permit2 checks their
+            signatures through ERC-1271, not ECDSA.
           </p>
         </section>
       </div>

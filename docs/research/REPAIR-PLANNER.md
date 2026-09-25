@@ -65,6 +65,8 @@ All modeled repairs complete before any attacker or other permit execution. This
 
 The model cannot recover funds already withdrawn or prevent a competing transaction from landing first. Its snapshot and signature inventory are caller-supplied, not authenticated onchain or proven complete. Time, gas, token-to-Permit2 approvals and replenishment assumptions remain those of Exposure Map. New signatures, owner actions, changing contract or token behavior, and chain reorganizations require a new analysis. Wanted-permit preservation concerns authorization execution, not economic delivery or guaranteed token transfers.
 
+**Smart-account owners are unsupported.** The planner inherits the Exposure Map's EOA-only signature check. If the owner address has code, including an EOA delegated under EIP-7702, Permit2 validates signatures through ERC-1271 instead of ECDSA, so a plan computed here may not block what the contract accepts. Confirm the owner has no code at the snapshot block before using a plan.
+
 ## Close prior art
 
 | Primary source | Existing behavior | Boundary of this experiment |
