@@ -1,19 +1,17 @@
-# Korp TxCert — competition source snapshot
+# Korp TxCert — live testnet and competition prototype
 
-Experimental owner-policy certificates and a persistent budget signer for AI-agent transactions. AI-assisted development; unaudited. No customer or revenue claims.
+Experimental owner-policy certificates and persistent signer budgets for AI-agent transactions. AI-assisted and unaudited.
 
-Live recorded proof lab: https://korp-txcert-proof-lab.mute-cell-557f.workers.dev
+- [Live four-testnet policy checker](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev) — Base, Ethereum, Arbitrum and Optimism Sepolia; read-only, no signing or broadcasting.
+- [Recorded budget proof lab](https://korp-txcert-proof-lab.mute-cell-557f.workers.dev) — local/offline evidence.
+- [Real Base Sepolia test-USDC payment](https://sepolia.basescan.org/tx/0x253006ca04b98c1870b152f6e13f510ea4a2e2092c19893ce65ebbae7b6c1c61) — 0.01 test USDC; certificate verified and replay protection passed on September 25, 2026. Operator test, not revenue.
 
-## Source and reproduction
-Extract `korp-txcert-source.zip`. This initial repository delivery contains a source archive preserving the project directory structure. It is not yet a browsable source tree or production deployment package.
+## Reproduce
+Extract `korp-txcert-source.zip` (source structure preserved). Node 24 and Python 3. Run `npm install --ignore-scripts`, `npm run check`, `npm run demo:chain` and `npm run demo:competition`. The snapshot includes 168 passing tests, live Worker/UI, testnet payment verification script, and public evidence.
 
-Node 24 and Python 3 are required. Run `npm install --ignore-scripts`, then `npm run check`, `npm run demo:chain`, and `npm run demo:competition`.
+Deploy the read-only checker to your Cloudflare account with `npx wrangler deploy --config live-testnet/wrangler.jsonc`. No keys are needed for that Worker. See `docs/hackathon/LIVE-TESTNET.md` inside the archive for evidence and limits.
 
-The local-chain harness starts a loopback-only Anvil instance and stops it on completion. Two simulated native transfers execute; cumulative overspending is rejected before signing and after a database restart. No real funds or remote chain RPC are used. The offline token demo uses synthetic USDC intent; it does not settle USDC.
+## Scope
+The public checker evaluates caller-supplied native-transfer rules and reads RPC data. It does not enforce independent owner permissions or persistent spending budgets. The separate Node/SQLite budget signer is exercised on a local EVM with simulated native currency. A hosted signer-to-public-chain budget flow is not implemented. The separate Base Sepolia certificate service has a verified public test payment; that does not prove budget-controlled transfers on four chains.
 
-## Scope and disclosure
-This extends existing Korp TxCert work. September 25 additions: SQLite budget adapter, nine-scenario demo, local EVM integration, proof-lab viewer. OpenAI Codex assisted code, tests and documentation. Generic spending controls already exist; portability of owner-policy evidence is a hypothesis needing user validation.
-
-No production keys, environment files, internal deployment configuration or personal documents are included. The production payment service is separate. Gas, token behavior, distributed replicas and facilitator settlement are not covered by these demos. Uncertain reservations require reconciliation.
-
-No open-source license grant has been selected yet; code is supplied for competition review. Dependency licenses remain their owners'.
+Extends existing Korp TxCert work. OpenAI Codex assisted implementation, tests and documentation. No production keys, private documents, environment files or internal account configuration included. No open-source license grant selected; supplied for competition review. Dependency licenses remain their owners'.
