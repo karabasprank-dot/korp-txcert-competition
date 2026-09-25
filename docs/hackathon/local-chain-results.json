@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-09-25T04:19:05.948Z",
+  "mode": "LOCAL_EVM",
+  "status": "PASS",
+  "realFundsMoved": "0",
+  "asset": "simulated native wei",
+  "certificateSource": "Actual Hono /v1/certify handler with development payment",
+  "chainState": "Isolated Anvil, Sepolia chain ID; not public Sepolia",
+  "recipientBalance": "60",
+  "reserved": "60",
+  "overspendRejectedBeforeSigning": true,
+  "restartOverspendRejected": true,
+  "receipts": [
+    {
+      "hash": "0xd802af297205460f063e4023e2081c74dfd04a7cb2c54b3a93071777a219b058",
+      "block": "1",
+      "status": "success"
+    },
+    {
+      "hash": "0x5a4befda1628dcafbe269c1d7a821707b13ecd1f2d3ae9fe9dc37192d217bb91",
+      "block": "2",
+      "status": "success"
+    }
+  ],
+  "limitations": [
+    "No public testnet settlement",
+    "No x402 facilitator payment",
+    "Native transfers only in this integration",
+    "Not audited; gas excluded from spend budget"
+  ]
+}

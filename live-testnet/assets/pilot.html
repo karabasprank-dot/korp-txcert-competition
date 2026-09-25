@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Korp · x402 budget pilot</title><style>body{margin:0;background:#101411;color:#eff2e9;font:17px system-ui;line-height:1.6}main{max-width:850px;margin:auto;padding:40px 24px}h1{font-size:clamp(30px,5vw,48px);line-height:1.15}a{color:#d9f49a}li{margin:14px 0}pre{background:#1b231b;padding:18px;overflow:auto;font-size:13px;border-radius:12px}.label{color:#d9f49a}p{color:#c7cec6}</style><main><p style="padding:14px;background:#173b35;border-radius:10px"><a href="/promise" style="color:#a3e8d0">Korp Promise Receipt — test our experimental protocol →</a></p><div class="label">KORP / VERIFIED BASE SEPOLIA EXPERIMENT</div><p><a href="/outcomes">New: check whether the paid task met its requirements →</a></p><h1>Two payments allowed.<br>The next one blocked.</h1><p>An owner-controlled signer reserved a total allowance of 0.02 test USDC. Two x402 API calls each paid 0.01 test USDC. The next payment was rejected before authorization, including after restarting the persistent budget store.</p><ul><li>Payment 1: <a href="https://sepolia.basescan.org/tx/0x6bbceb1925b6d8beac7c3b7d6ac9cbdd1b160bfb9cdea24e9b730339d27d81b6">confirmed on-chain receipt</a>. Returned certificate verified at issuance.</li><li>Payment 2: <a href="https://sepolia.basescan.org/tx/0x40cfe7f85560136f9ba67345ed9d63718bee1ca34e4906837f1225c2906d9221">confirmed on-chain receipt</a>. Returned certificate verified at issuance.</li></ul><p>Operator test, September 25, 2026. Test tokens only; this is not customer revenue. The guard runs in an owner-controlled Node/SQLite process. This page displays recorded public-testnet evidence; it does not hold keys, sign or broadcast payments.</p><p><a href="https://github.com/karabasprank-dot/korp-txcert-competition">Get the example and integration guide on GitHub →</a></p><p>The source archive includes docs/pilot/README.md and scripts/pilot/run-base-sepolia.ts. Mainnet is unsupported by this pilot. Agents must not have access to the raw key, configuration or writable database. Budget reservations persist even when settlement is uncertain.</p><h2>Recorded verification</h2><pre>{
+  &quot;at&quot;: &quot;2026-09-25T06:26:00.325Z&quot;,
+  &quot;mode&quot;: &quot;operator-test; Base Sepolia; no real money&quot;,
+  &quot;status&quot;: &quot;PASS&quot;,
+  &quot;payments&quot;: [
+    {
+      &quot;httpStatus&quot;: 200,
+      &quot;transaction&quot;: &quot;0x6bbceb1925b6d8beac7c3b7d6ac9cbdd1b160bfb9cdea24e9b730339d27d81b6&quot;,
+      &quot;certificateVerified&quot;: true,
+      &quot;onchainConfirmed&quot;: true
+    },
+    {
+      &quot;httpStatus&quot;: 200,
+      &quot;transaction&quot;: &quot;0x40cfe7f85560136f9ba67345ed9d63718bee1ca34e4906837f1225c2906d9221&quot;,
+      &quot;certificateVerified&quot;: true,
+      &quot;onchainConfirmed&quot;: true
+    }
+  ],
+  &quot;reserved&quot;: &quot;20000&quot;,
+  &quot;sentAuthorizations&quot;: 2,
+  &quot;blockedBeforePayment&quot;: true,
+  &quot;blockedAfterRestart&quot;: true
+}</pre><p><a href="/">Four-testnet read-only checker</a> · <a href="https://korp-txcert-proof-lab.mute-cell-557f.workers.dev">Separate local budget proof lab</a></p></main></html>

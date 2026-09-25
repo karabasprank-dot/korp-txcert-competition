@@ -1,0 +1,19 @@
+{
+  "chainId": 84532,
+  "from": "0x2222222222222222222222222222222222222222",
+  "transaction": {
+    "to": "0x3333333333333333333333333333333333333333",
+    "data": "0x",
+    "value": "1000",
+    "nonce": "0"
+  },
+  "policy": {
+    "expectedAction": "native-transfer",
+    "allowedRecipients": ["0x3333333333333333333333333333333333333333"],
+    "allowedSpenders": [],
+    "maxNativeValueWei": "1000",
+    "maxTokenSpend": [],
+    "allowUnlimitedApproval": false,
+    "allowUnknownCalls": false
+  }
+}

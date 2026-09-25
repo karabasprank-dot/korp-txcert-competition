@@ -1,0 +1,73 @@
+{
+  "generatedAt": "2026-09-25T04:20:30.877Z",
+  "mode": "OFFLINE_SIMULATION",
+  "chain": "Base Sepolia",
+  "fundsTransferred": "0",
+  "certificateSource": "Synthetic local attestor; not deployed API",
+  "nonceSource": "Synthetic pending nonce; no RPC",
+  "signatures": 2,
+  "reservedAtomic": "70000000",
+  "results": [
+    {
+      "scenario": "First authorized 30 USDC",
+      "outcome": "SIGNED",
+      "expected": "SIGNED",
+      "reservedAtomic": "30000000"
+    },
+    {
+      "scenario": "Second authorized 30 USDC",
+      "outcome": "SIGNED",
+      "expected": "SIGNED",
+      "reservedAtomic": "60000000"
+    },
+    {
+      "scenario": "50 USDC would exceed aggregate 100 USDC budget",
+      "outcome": "BUDGET_EXCEEDED",
+      "expected": "BUDGET_EXCEEDED",
+      "reservedAtomic": "60000000"
+    },
+    {
+      "scenario": "Agent loosens owner policy",
+      "outcome": "OWNER_POLICY_MISMATCH",
+      "expected": "OWNER_POLICY_MISMATCH",
+      "reservedAtomic": "60000000"
+    },
+    {
+      "scenario": "Expired certificate",
+      "outcome": "INVALID_TIME_WINDOW",
+      "expected": "INVALID_TIME_WINDOW",
+      "reservedAtomic": "60000000"
+    },
+    {
+      "scenario": "Replay already signed nonce",
+      "outcome": "NONCE_ALREADY_RESERVED",
+      "expected": "NONCE_ALREADY_RESERVED",
+      "reservedAtomic": "60000000"
+    },
+    {
+      "scenario": "Overspend after signer restart",
+      "outcome": "BUDGET_EXCEEDED",
+      "expected": "BUDGET_EXCEEDED",
+      "reservedAtomic": "60000000"
+    },
+    {
+      "scenario": "Signing outage preserves 10 USDC reservation",
+      "outcome": "SIGNER_OFFLINE",
+      "expected": "SIGNER_OFFLINE",
+      "reservedAtomic": "70000000"
+    },
+    {
+      "scenario": "Uncertain signing cannot be retried blindly",
+      "outcome": "NONCE_ALREADY_RESERVED",
+      "expected": "NONCE_ALREADY_RESERVED",
+      "reservedAtomic": "70000000"
+    }
+  ],
+  "limitations": [
+    "Not audited or production enabled",
+    "No onchain settlement or x402 payment tested",
+    "Native/standard ERC20 transfer intent only; token behavior and gas excluded",
+    "Same SQLite file required across signer processes; owner protects configuration and signer key",
+    "Reservations retained on ambiguous failures; no automatic refund"
+  ]
+}

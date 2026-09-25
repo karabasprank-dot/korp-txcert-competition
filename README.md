@@ -1,73 +1,97 @@
-# Korp Research: Repair Planner, Exposure Map & TxCert
+# Korp: Permit2 Exposure Map and Repair Planner
 
-**Korp Repair Planner** finds the least-cost supported permission repair that blocks unwanted signed Permit2 batches, preserves a specified wanted sequence, and keeps explicitly cleared stored allowances at zero. Costs are declared synthetic units, not gas. Browser-only, unsigned calldata, AI-assisted and unaudited.
+**See what your signed Permit2 approvals can really take, and find the cheapest way to cancel the ones you no longer want without breaking the ones you do.**
 
-## Repair Planner — experimental release
+Everything runs in the browser from unsigned data. Nothing connects to a wallet, signs or broadcasts. This is AI-assisted research code and has not been audited.
 
-[Open the planner](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/repair) · [Model and prior art](REPAIR-PLANNER.md) · [Core source](permit-repair.ts)
+[Open the Exposure Map](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/exposure) · [Open the Repair Planner](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/repair)
 
-Example: an unwanted batch uses token X + Y, while a wanted batch uses X + Z. Invalidating X breaks both; invalidating Y can block the unwanted batch while preserving the wanted batch. If both signatures share the same cancellation scope, the planner reports no valid plan in the supported model. It also checks unwanted permissions that become executable only after other supplied batches run.
+## The problem in one example
 
-The solver enumerates bounded final nonce choices, compiles legal `invalidateNonces` and single-slot `lockdown` calls, and searches reachable permit orders. A nonce increase can **enable** a future permission, so it is never assumed universally safer. Wanted batches must execute together in the requested order; this does not guarantee swap fills or delivery. Nonzero cleared slots need lockdown plus any invalidations necessary to prevent restoration.
+You signed three Permit2 batches for the same spender. Batch A covers tokens X and Y, batch B covers Y and Z, and batch C covers X and Z. Each one grants 6 units.
 
-Results include unsigned calldata, a preserved sequence, expected slot state and a binding to the request. Rechecking uses the same solver. Later snapshot comparison checks caller-supplied values, not public-chain provenance or finality. Requests exceeding the work limits fail explicitly instead of being labeled impossible.
+| How you count it | Exposure |
+| --- | --- |
+| Add up every signature | 18 |
+| Take the largest grant per token and nonce | 9 |
+| **What Permit2 actually allows** | **6** |
 
-**Timing boundary:** every repair must complete before any third-party action. Separate EOA transactions are not atomic, and an attacker can act first or between calls. The planner does not connect a wallet, sign, broadcast, estimate fees, recover lost funds or certify live-wallet safety. Inventory completeness, owner identity, deployment semantics and snapshot truth are assumptions.
+Any two of these batches reuse the same token nonce, so only one of them can ever execute. The Exposure Map follows Permit2's real nonce rules and returns the true maximum, plus a withdrawal order that achieves it.
 
-Reproduce inside the source archive: `node --import tsx scripts/research/repair-fixtures.ts`, `node --import tsx scripts/research/build-repair.ts`, and the local EVM harness `scripts/research/permit-repair-chain.ts`. The pinned reference directory documents local chain setup. The public fixtures use expired synthetic signatures and no private keys.
+Now say you want to cancel a batch using X + Y but keep one using X + Z. Invalidating X's nonce would kill both. Invalidating Y's nonce kills only the unwanted one. The Repair Planner finds that choice for you and outputs the unsigned `invalidateNonces` calldata.
 
-Validation: typecheck, lint and 236 tests pass, including 18 repair unit cases and six local-contract evidence checks. The planner-generated calls were executed against the pinned official AllowanceTransfer module on a local EVM. No public-chain transactions or real funds were used for the repair experiment.
+![Exposure Map showing a maximum of 6 against a naive sum of 18](docs/images/exposure-map.png)
 
-Revocation and selective cancellation already exist. [The research note](REPAIR-PLANNER.md) identifies IDEX, Uniswap, MetaMask and Revoke.cash precedents. This is a dated Korp implementation, not a first-ever invention claim.
+![Repair Planner proposing a single nonce advance that blocks the unwanted batch and keeps the wanted one](docs/images/repair-planner.png)
 
-**Korp Exposure Map** computes the maximum collectible exposure represented by a bounded inventory of signed Permit2 allowance batches. It verifies EOA signatures, explores sequential nonce dependencies, and returns a withdrawal witness. Built on the existing Korp research project. AI-assisted and unaudited; not a claim of first-ever invention.
+## How it works
 
-## Exposure Map — experimental release
+**Exposure Map** ([source](src/research/permit-exposure.ts) · [research notes](docs/research/EXPOSURE-RESEARCH.md))
 
-[Open the browser-only verifier](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/exposure) · [Research and prior art](EXPOSURE-RESEARCH.md) · [Core source](permit-exposure.ts)
+- It verifies each batch's EIP-712 signature against the owner, chain and Permit2 address. Both 65-byte and 64-byte (EIP-2098) signatures are accepted.
+- It explores every reachable order of up to 12 batches. Each batch advances all of its token nonces at once, so this is at most 4,096 states.
+- It counts existing allowances, grants that are unlocked by earlier ones, and zero or expired grants that only move a nonce forward. Nonce cycles that block every batch are handled correctly.
+- It returns the maximum, a witness order and the naive totals for comparison. Anyone can recompute the result and replay the witness. An altered maximum is rejected.
 
-Three batches granting X+Y, Y+Z and X+Z each appear to expose six risk units. Summing the signatures gives 18; summing per-token/nonce maxima gives 9. With the same owner and spender, atomic nonce conflicts mean only one batch can execute: the actual model maximum is 6. Sequential regrants can instead increase exposure, and circular nonce dependencies can prevent every batch from executing. All amounts use explicitly declared synthetic weights, not dollar prices.
+**Repair Planner** ([source](src/research/permit-repair.ts) · [research notes](docs/research/REPAIR-PLANNER.md))
 
-The implementation enumerates reachable nonce frontiers for up to 12 batches. Existing finite allowances count even after their originating permit was consumed. Grants with expired allowances or zero amounts can advance nonces and enable a later grant, provided their signature deadlines remain valid. Unsupported data is rejected rather than treated as zero exposure. The result can be recomputed using the same solver, its witness replayed, and an altered claimed maximum rejected; this is not an independent optimality proof.
+- It chooses a final nonce for each token and spender pair, and it locks down any stored allowance you asked to clear.
+- It only needs to try the current nonce, each signed nonce and each signed nonce + 1. Any other value blocks a slot in exactly the same way, so this search is complete.
+- Raising a nonce can **unlock** a later signature, so every candidate is checked against every order of the supplied batches.
+- The result is the cheapest plan in declared synthetic cost units (not gas), or a specific explanation of why no plan exists. If a request exceeds the search limits, it fails with an error instead of being reported as impossible.
+- The planner's calls were executed against the pinned official Permit2 `AllowanceTransfer` contract on a local EVM ([evidence](docs/research/permit-repair-chain.json)). No public-chain transactions were made.
 
-**Limits:** the inventory and snapshot must be complete and correct; they are not authenticated against a public blockchain. The model freezes time and assumes standard Permit2 semantics, colluding spenders, replenished balances and sufficient token-to-Permit2 approval. It excludes unlimited grants, nonce wrap, duplicate-token batches, new signatures and changing token economics. It does not revoke permissions or certify that a wallet is safe. Browser inputs remain local.
+## Run it locally
 
-Reproduce: `node --import tsx scripts/research/exposure-fixtures.ts` and `node --import tsx scripts/research/build-exposure.ts`. Local EVM harness: `scripts/research/permit-exposure-chain.ts`; dependency provenance and setup are documented in its reference directory. Public examples contain deliberately expired synthetic signatures and no wallet keys.
+Use Node 24 (see `.nvmrc`). Node 22 also works but prints SQLite "experimental" warnings.
 
-**Research status:** the contribution under investigation is a faithful compiler of Permit2 batch semantics with reproducible results and withdrawal witnesses, not new cryptography or a new search algorithm. The [research record](EXPOSURE-RESEARCH.md) documents 12 close prior-art comparisons and rejected ideas. Publication dates our implementation; it does not establish exclusive ownership, patentability, standards approval or worldwide priority.
+```sh
+npm ci --ignore-scripts
+npm run check   # SDK build, typecheck, lint and 238 tests
+```
 
-- [Live four-testnet policy checker](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev) — Base, Ethereum, Arbitrum and Optimism Sepolia; read-only, no signing or broadcasting.
-- [Recorded budget proof lab](https://korp-txcert-proof-lab.mute-cell-557f.workers.dev) — local/offline evidence.
-- [Real Base Sepolia test-USDC payment](https://sepolia.basescan.org/tx/0x253006ca04b98c1870b152f6e13f510ea4a2e2092c19893ce65ebbae7b6c1c61) — 0.01 test USDC; certificate verified and replay protection passed on September 25, 2026. Operator test, not revenue.
+To reproduce the research results:
 
-## Research prototype: Korp Promise Receipt
+```sh
+node --import tsx scripts/research/exposure-fixtures.ts   # public exposure examples
+node --import tsx scripts/research/repair-fixtures.ts     # public repair examples
+node --import tsx scripts/research/build-exposure.ts      # browser bundles
+node --import tsx scripts/research/build-repair.ts
+```
 
-**Make the payment authorization remember the seller's signed promise.** [Try the public verifier](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/promise) · [Protocol and prior-art comparison](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/promise-receipt-spec.md).
+The local EVM harnesses are `scripts/research/permit-exposure-chain.ts` and `scripts/research/permit-repair-chain.ts`. [`scripts/research/permit2-reference/`](scripts/research/permit2-reference/README.md) documents the pinned Permit2 source and setup. The public examples use deliberately expired synthetic signatures and include no private keys.
 
-A merchant signs acceptance terms. Their digest and signature are committed inside an EIP-3009 nonce. A later merchant-signed response root allows disclosure of one failed equality rule without publishing the unrelated field values. **Correction:** nonce-based payment commitments already appear in Roundhouse KYA, Warrant and VIC. Our earlier search was incomplete. See [the expanded prior-art note](PROMISE-PRIOR-ART-UPDATE.md). No first-invention or patentability claim is made for this prototype.
+## Limits
 
-The implemented local experiment verifies a signed contradiction and rejects both a merchant's re-signed changed promise and a buyer's fabricated value. **The demo uses unfunded synthetic accounts and expired test authorizations, makes no payments and does not verify settlement.** It does not prove semantic truth, identity, fraud or refund entitlement. Merchant participation and further integration/security work are required.
+Read these before trusting a result.
 
-Source: `src/core/promise-receipt.ts`. Reproduce: `node --import tsx scripts/research/promise-demo.ts`. Specification: [PROMISE-RECEIPT-SPEC.md](PROMISE-RECEIPT-SPEC.md). Public test vectors: `docs/pilot/promise-receipt-demo.json`. Developed for Korp with AI assistance; no exclusive-invention claim.
+- **Timing:** every repair must land before anyone else acts. Separate transactions are not atomic, and an attacker can act first or between calls.
+- **Smart-account owners are not supported.** Permit2 checks signatures with ECDSA only when the owner address has no code. Contract wallets and EIP-7702 delegated EOAs go through ERC-1271 instead, so these results do not apply to them. Check that `eth_getCode` returns `0x` for the owner.
+- **Your input is trusted.** The signature list and on-chain snapshot are supplied by the caller. Neither is checked against a real chain or proven complete.
+- **Time is frozen.** Results hold for one timestamp. New signatures, later blocks, other owner actions and reorgs are out of scope.
+- **Token behavior is idealized.** The model assumes spenders collude, balances are replenished and approvals to Permit2 are sufficient. Unlimited grants, nonce wraparound, duplicate tokens in a batch, and non-standard tokens are rejected or excluded.
+- **Weights are synthetic.** Amounts use declared weights, not prices.
+- **It does not act for you.** Nothing here revokes permissions, recovers funds or certifies that a live wallet is safe.
 
-## Korp Outcome Check
+## Prior art
 
-An agent can pay successfully and still receive stale data, the wrong chain, or broken output. [Try the live read-only demo](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/outcomes).
+Revocation tools and selective cancellation already exist (IDEX, Uniswap, MetaMask and Revoke.cash, among others). The contribution being investigated is a faithful model of Permit2 batch semantics with reproducible witnesses, not new cryptography or a new search algorithm. The research notes compare the closest prior work. Publishing here dates this implementation. It is not a claim of first invention, patentability or priority.
 
-The source now combines preapproved output requirements, one persistent authorization attempt per owner-issued task, and read-only payment-receipt reconciliation. A fresh nonce after a timeout does not create permission to pay again. Reports separate payment evidence from response observations and deterministic acceptance checks. They do not prove merchant authorship or useful delivery, issue refunds, or establish fraud.
+## Also in this repository
 
-New code: `src/core/outcome-contract.ts`, `scripts/pilot/task-payments.ts`. Integration, limits and competing approaches: `docs/pilot/OUTCOME-CHECK.md`. New cases are tested using local fixtures; the earlier testnet receipts below are a separate budget experiment. No claim of world-first invention. `docs/pilot/INVENTION-RESEARCH.md` preserves the broader research proposal; the narrower signature-based Promise Receipt prototype above is implemented.
+These pieces are earlier Korp TxCert work. Each is separate from the Permit2 tools and has its own evidence and limits.
 
-## Enforced x402 API-payment budget
+| Component | What it does | Details |
+| --- | --- | --- |
+| Live four-testnet checker | Read-only checks of native transfer rules on Base, Ethereum, Arbitrum and Optimism Sepolia. [Live](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev) | [docs/hackathon/LIVE-TESTNET.md](docs/hackathon/LIVE-TESTNET.md) |
+| x402 payment budget | A Node signer that enforces a cumulative test-USDC budget before signing. Two 0.01 payments settled on Base Sepolia, and a third was blocked, including after a restart. [Evidence](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/pilot.html) · [example tx](https://sepolia.basescan.org/tx/0x253006ca04b98c1870b152f6e13f510ea4a2e2092c19893ce65ebbae7b6c1c61) | [docs/pilot/README.md](docs/pilot/README.md) |
+| Outcome Check | Checks that a paid response met preapproved requirements, and allows one payment attempt per task. [Demo](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/outcomes) | [docs/pilot/OUTCOME-CHECK.md](docs/pilot/OUTCOME-CHECK.md) |
+| Promise Receipt | Commits a merchant's signed terms inside an EIP-3009 nonce, so a broken promise can be shown later. Similar nonce commitments already exist ([prior art](docs/pilot/PROMISE-PRIOR-ART-UPDATE.md)). [Verifier](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/promise) | [docs/pilot/PROMISE-RECEIPT-SPEC.md](docs/pilot/PROMISE-RECEIPT-SPEC.md) |
 
-The owner-controlled Node signer now enforces a cumulative Base Sepolia test-USDC authorization budget before signing. Two 0.01 test-USDC purchases settled; the third was blocked before authorization and remained blocked after a database restart. See [public pilot evidence](https://korp-txcert-live-testnet.mute-cell-557f.workers.dev/pilot.html) and `docs/pilot/README.md` inside the archive. This is a separate gasless x402 authorization path, not the unfinished hosted native-transfer signer. No production funds or customer adoption are claimed.
+All payments above are operator tests with test tokens, not revenue. No production funds or customers are claimed. To deploy the read-only checker to your own Cloudflare account, run `npx wrangler deploy --config live-testnet/wrangler.jsonc`. It needs no keys.
 
-## Reproduce
-Extract `korp-txcert-source.zip` (source structure preserved). Node 24 and Python 3. Run `npm install --ignore-scripts`, `npm run check`, `npm run demo:chain` and `npm run demo:competition`. The snapshot includes 236 passing tests, live Worker/UI, testnet payment verification script, and public evidence.
+## Credits and license
 
-Deploy the read-only checker to your Cloudflare account with `npx wrangler deploy --config live-testnet/wrangler.jsonc`. No keys are needed for that Worker. See `docs/hackathon/LIVE-TESTNET.md` inside the archive for evidence and limits.
+OpenAI Codex assisted the original implementation, tests and documentation, and later maintenance used Claude Code. No production keys, private documents or environment files are included.
 
-## Scope
-The public checker evaluates caller-supplied native-transfer rules and reads RPC data. It does not enforce independent owner permissions or persistent spending budgets. The separate Node/SQLite budget signer is exercised on a local EVM with simulated native currency. A hosted signer-to-public-chain budget flow is not implemented. The separate Base Sepolia certificate service has a verified public test payment; that does not prove budget-controlled transfers on four chains.
-
-Extends existing Korp TxCert work. OpenAI Codex assisted implementation, tests and documentation. No production keys, private documents, environment files or internal account configuration included. No open-source license grant selected; supplied for competition review. Dependency licenses remain their owners'.
+No open-source license has been chosen yet. The code is supplied for competition review. Dependency licenses remain with their owners.
